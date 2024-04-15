@@ -48,7 +48,7 @@
         >
           <div class="flex-shrink-0 flex items-center">
             <img
-              src="../assets/img/โลโก้.png"
+              src="https://tailwindui.com/img/logos/mark.svg?color=white"
               alt="logo"
               class="block h-8 w-auto"
             />
