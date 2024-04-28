@@ -11,7 +11,7 @@
         <form @submit.prevent="AddEmployee" class="p-6">
           <!-- Modal header -->
           <div class="flex items-center justify-between pb-4 border-b">
-            <h3 class="text-lg font-semibold">
+            <h3 class="text-2xl font-semibold">
               เพิ่มพนักงาน: {{ formData.employee_name }}
             </h3>
 
@@ -43,7 +43,7 @@
             <div class="col-span-2">
               <label
                 for="employee_name"
-                class="block mb-2 text-sm font-medium text-gray-900"
+                class="block mb-2 text-2xl font-medium text-gray-900"
                 >ชื่อ</label
               >
               <input
@@ -51,7 +51,7 @@
                 type="text"
                 name="employee_name"
                 id="employee_name"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-2xl rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                 placeholder="ป้อน ชื่อพนักงาน"
                 required
               />
@@ -61,14 +61,14 @@
             <div class="col-span-2">
               <label
                 for="employee_phone"
-                class="block mb-2 text-sm font-medium text-gray-900"
+                class="block mb-2 text-2xl font-medium text-gray-900"
                 >เบอร์โทร</label
               >
               <input
                 v-model="formData.employee_phone"
                 name="employee_phone"
                 id="employee_phone"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-2xl rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                 placeholder="ป้อน เบอร์โทร 10 หลัก"
                 required
                 minlength="10"
@@ -81,14 +81,14 @@
             <div class="col-span-2">
               <label
                 for="employee_position"
-                class="block mb-2 text-sm font-medium text-gray-900"
+                class="block mb-2 text-2xl font-medium text-gray-900"
                 >เลือกตำแหน่ง</label
               >
               <select
                 v-model="formData.employee_position"
                 name="employee_position"
                 id="employee_position"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-2xl rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                 required
               >
                 <option value="" disabled selected>กรุณาเลือกตำแหน่ง</option>
@@ -102,7 +102,7 @@
             <div class="col-span-2 flex items-center">
               <label
                 for="employee_status"
-                class="block mr-2 text-sm font-medium text-gray-900"
+                class="block mr-2 text-2xl font-medium text-gray-900"
                 >เลือกสถานะ</label
               >
 
@@ -118,7 +118,7 @@
 
               <!-- Text indicating status -->
               <span
-                class="text-sm ml-2 font-medium text-gray-900"
+                class="text-2xl ml-2 font-medium text-gray-900"
                 v-text="formData.employee_status ? 'เปิด' : 'ปิด'"
               ></span>
             </div>
@@ -127,7 +127,7 @@
             <div class="col-span-2">
               <label
                 for="employee_username"
-                class="block mb-2 text-sm font-medium text-gray-900"
+                class="block mb-2 text-2xl font-medium text-gray-900"
                 >ชื่อผู้ใช้</label
               >
               <input
@@ -135,7 +135,7 @@
                 type="text"
                 name="employee_username"
                 id="employee_username"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-2xl rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                 placeholder="ป้อน ชื่อผู้ใช้"
                 required
               />
@@ -145,7 +145,7 @@
             <div class="col-span-2">
               <label
                 for="employee_password"
-                class="block mb-2 text-sm font-medium text-gray-900"
+                class="block mb-2 text-2xl font-medium text-gray-900"
                 >รหัสผ่าน</label
               >
               <input
@@ -153,7 +153,7 @@
                 type="password"
                 name="employee_password"
                 id="employee_password"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-2xl rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
                 placeholder="ป้อน รหัสผ่าน 6 ตัวอักษรขึ้นไป"
                 required
                 minlength="6"
@@ -165,13 +165,13 @@
           <div class="p-3 mt-2 text-center space-x-4 md:block">
             <button
               type="submit"
-              class="mb-2 md:mb-0 bg-indigo-500 border px-5 py-2 text-sm shadow-sm font-medium tracking-wider text-white rounded-md hover:shadow-lg hover:bg-indigo-600"
+              class="mb-2 md:mb-0 bg-indigo-500 border px-5 py-2 text-2xl shadow-sm font-medium tracking-wider text-white rounded-md hover:shadow-lg hover:bg-indigo-600"
             >
               เพิ่ม
             </button>
             <button
               @click.prevent="ModalClose"
-              class="mb-2 md:mb-0 bg-red-500 border px-5 py-2 text-sm shadow-sm font-medium tracking-wider text-white rounded-md hover:shadow-lg hover:bg-red-600"
+              class="mb-2 md:mb-0 bg-red-500 border px-5 py-2 text-2xl shadow-sm font-medium tracking-wider text-white rounded-md hover:shadow-lg hover:bg-red-600"
             >
               ยกเลิก
             </button>

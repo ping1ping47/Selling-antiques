@@ -1,7 +1,7 @@
 <template>
   <!-- component -->
-  <div>
-    <div class="p-4 flex">
+  <div class="text-2xl">
+    <div class="p-4">
       <h1 class="text-3xl">พนักงาน</h1>
     </div>
 
@@ -14,7 +14,8 @@
       </button>
       <Add v-if="showAddPopup" @close="closeAddPopup" @add="addEmployee" />
     </div>
-    <div class="px-3 py-4 flex justify-center">
+
+    <div class="px-4 flex justify-center">
       <div class="overflow-x-auto w-full">
         <table class="w-full text-md bg-green-300 shadow-md rounded mb-4">
           <tbody class="border border-green-300">
@@ -85,14 +86,12 @@
   </div>
 
   <!-- Pagination Controls -->
-  <div
-    class="fixed bottom-0 left-0 right-0 px-3 bg-white border-t border-gray-300"
-  >
+  <div class="fixed bottom-0 left-0 right-0 px-3 bg-green-200">
     <div class="container md:mb-8 pt-8 mx-auto flex justify-center select-none">
       <a
         @click="prevPage"
-        :class="{ 'cursor-not-allowed text-gray-400': currentPage === 1 }"
-        class="block border border-r-0 rounded-l px-4 py-2 hover:bg-gray-200 text-gray-600"
+        :class="{ 'cursor-not-allowed text-gray-500': currentPage === 1 }"
+        class="block border border-y-amber-900 rounded-l px-4 py-2 hover:bg-gray-200 text-gray-900"
         href="#"
         rel="prev"
       >
@@ -105,7 +104,7 @@
         @click="goToPage(page)"
         :class="{
           'bg-indigo-500 text-white': page === currentPage,
-          'hover:bg-gray-200 text-gray-600': page !== currentPage,
+          'hover:bg-gray-500 text-gray-600': page !== currentPage,
         }"
         class="block border border-l-0 border-r-0 px-4 py-2 cursor-pointer"
         href="#"
@@ -116,9 +115,9 @@
       <a
         @click="nextPage"
         :class="{
-          'cursor-not-allowed text-gray-400': currentPage === lastPage,
+          'cursor-not-allowed text-gray-500': currentPage === lastPage,
         }"
-        class="block border border-l-0 rounded-r px-4 py-2 hover:bg-gray-200 text-gray-600"
+        class="block border border-y-amber-900 px-4 py-2 hover:bg-gray-200 text-gray-900"
         href="#"
         rel="next"
       >

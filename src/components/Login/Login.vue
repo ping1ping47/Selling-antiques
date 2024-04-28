@@ -3,7 +3,7 @@
     <div class="flex-grow flex items-center justify-center relative">
       <!-- Login Form -->
       <div
-        class="relative z-10 bg-white p-10 rounded-md shadow-lg form-animation md:w-1/2 lg:w-2/4 sm:w-3/4"
+        class="relative z-10 bg-white p-10 rounded-md shadow-lg form-animation sm:w-3/3 md:w-2/3 lg:w-1/3"
         style="opacity: 0.9"
       >
         <h1 class="text-xl font-bold mb-10 text-center">เข้าสู่ระบบ</h1>

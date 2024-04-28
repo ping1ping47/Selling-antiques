@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="userData">
     <h1>Edit User Information</h1>
     <div>
       <label for="username">Username:</label>
@@ -12,7 +12,11 @@
     <!-- Add more fields as needed -->
     <button @click="saveChanges">Save Changes</button>
   </div>
+  <div v-else>
+    <p>Loading user data...</p>
+  </div>
 </template>
+
 
 <script setup>
 import { computed } from "vue";

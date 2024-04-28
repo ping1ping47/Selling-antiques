@@ -1,7 +1,7 @@
-<template >
-  <div id="app" class="text-gray-900 bg-green-200 h-screen">
+<template>
+  <div id="app" class="text-black bg-[#B9DCA9] h-screen w-screen">
     <div v-if="userRole === 'admin'">
-      <nav>
+      <nav class="z-50">
         <BarAdmin />
       </nav>
       <router-view />
