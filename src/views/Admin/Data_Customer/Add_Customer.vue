@@ -36,15 +36,32 @@
               </svg>
             </button>
           </div>
+          <!-- Customer full name -->
+          <div class="col-span-1 lg:col-span-4">
+            <label
+              for="fullname"
+              class="block mb-2 text-sm font-medium text-gray-900"
+              >ชื่อ-สกุล</label
+            >
+            <input
+              v-model="formData.fullname"
+              type="text"
+              name="fullname"
+              id="fullname"
+              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+              placeholder="ป้อน ชื่อเต็ม"
+              required
+            />
+          </div>
 
           <!-- Customer details -->
-          <div class="grid gap-6 mb-6 md:grid-cols-4">
+          <div class="grid gap-6 mb-6 md:grid-cols-2 lg:grid-cols-4">
             <!-- Customer full name -->
-            <div class="col-span-2">
+            <div class="col-span-1 lg:col-span-2">
               <label
                 for="id_card"
                 class="block mb-2 text-sm font-medium text-gray-900"
-                >หมายเลขบัตร</label
+                >บัตรประชาชน</label
               >
               <input
                 v-model="formData.id_card"
@@ -52,67 +69,73 @@
                 name="id_card"
                 id="id_card"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                placeholder="ป้อน หมายเลขบัตร"
+                placeholder="ป้อน บัตรประชาชน"
                 required
               />
             </div>
 
-            <!-- Customer full name -->
-            <div class="col-span-2">
+            <div class="col-span-1 lg:col-span-2">
               <label
-                for="fullname_th"
+                for="tel"
                 class="block mb-2 text-sm font-medium text-gray-900"
-                >ชื่อ</label
+                >เบอร์โทรศัพท์</label
               >
               <input
-                v-model="formData.fullname_th"
+                v-model="formData.tel"
                 type="text"
-                name="fullname_th"
-                id="fullname_th"
+                name="tel"
+                id="tel"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                placeholder="ป้อน ชื่อลูกค้า"
+                placeholder="ป้อน ระดับ"
                 required
               />
             </div>
 
-            <!-- Customer birthday -->
-            <div class="col-span-2">
+            <!-- Customer class -->
+            <div class="col-span-1 lg:col-span-2">
               <label
-                for="birthday_th"
+                for="level"
                 class="block mb-2 text-sm font-medium text-gray-900"
-                >วันเกิด</label
+                >ระดับ</label
               >
-              <input
-                v-model="formData.birthday_th"
-                type="text"
-                name="birthday_th"
-                id="birthday_th"
+              <select
+                v-model="formData.level"
+                name="level"
+                id="level"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                placeholder="ป้อน วันเกิด"
                 required
-              />
+              >
+                <option value="" disabled selected>กรุณาเลือกระดับ</option>
+                <option
+                  v-for="level in [1, 2, 3, 4, 5]"
+                  :key="level"
+                  :value="level"
+                >
+                  {{ level }}
+                </option>
+              </select>
             </div>
 
-            <!-- Customer religion -->
-            <div class="col-span-2">
+            <!-- Customer vehicle code -->
+            <div class="col-span-1 lg:col-span-2">
               <label
-                for="religion"
+                for="vehicle_code"
                 class="block mb-2 text-sm font-medium text-gray-900"
-                >ศาสนา</label
+                >ป้ายทะเบียน</label
               >
               <input
-                v-model="formData.religion"
+                v-model="formData.vehicle_code"
                 type="text"
-                name="religion"
-                id="religion"
+                name="vehicle_code"
+                id="vehicle_code"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                placeholder="ป้อน ศาสนา"
+                placeholder="ป้อน ป้ายทะเบียน"
                 required
               />
             </div>
 
             <!-- Customer address -->
-            <div class="col-span-2">
+            <div class="col-span-1 lg:col-span-4">
               <label
                 for="address"
                 class="block mb-2 text-sm font-medium text-gray-900"
@@ -129,111 +152,97 @@
               />
             </div>
 
-            <!-- Customer date of issue -->
-            <div class="col-span-2">
+            <!-- Province dropdown -->
+            <div class="col-span-1 lg:col-span-2">
               <label
-                for="date_of_issue"
+                for="province"
                 class="block mb-2 text-sm font-medium text-gray-900"
-                >วันออกบัตร</label
+                >จังหวัด</label
               >
-              <input
-                v-model="formData.date_of_issue"
-                type="text"
-                name="date_of_issue"
-                id="date_of_issue"
+              <select
+                v-model="formData.province"
+                name="province"
+                id="province"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                placeholder="ป้อน วันออกบัตร"
                 required
-              />
+              >
+                <option value="" disabled selected>กรุณาเลือกจังหวัด</option>
+                <option
+                  v-for="province in provinces"
+                  :value="province.id"
+                  :key="province.id"
+                >
+                  {{ province.name_th }}
+                </option>
+              </select>
             </div>
 
-            <!-- Customer date of expiry -->
-            <div class="col-span-2">
+            <!-- Amphure dropdown -->
+            <div v-if="formData.province" class="col-span-1 lg:col-span-2">
               <label
-                for="date_of_expiry"
+                for="district"
                 class="block mb-2 text-sm font-medium text-gray-900"
-                >วันหมดอายุ</label
+                >อำเภอ</label
               >
-              <input
-                v-model="formData.date_of_expiry"
-                type="text"
-                name="date_of_expiry"
-                id="date_of_expiry"
+              <select
+                v-model="formData.district"
+                name="district"
+                id="district"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                placeholder="ป้อน วันหมดอายุ"
                 required
-              />
+              >
+                <option value="" disabled selected>กรุณาเลือกอำเภอ</option>
+                <option
+                  v-for="amphure in amphures"
+                  :value="amphure.id"
+                  :key="amphure.id"
+                >
+                  {{ amphure.name_th }}
+                </option>
+              </select>
             </div>
 
-            <!-- Customer vehicle -->
-            <div class="col-span-2">
+            <!-- Tambon dropdown -->
+            <div v-if="formData.province" class="col-span-1 lg:col-span-2">
               <label
-                for="vehicle"
+                for="subdistrict"
                 class="block mb-2 text-sm font-medium text-gray-900"
-                >รถ</label
+                >ตำบล</label
               >
-              <input
-                v-model="formData.vehicle"
-                type="text"
-                name="vehicle"
-                id="vehicle"
+              <select
+                v-model="formData.subdistrict"
+                name="subdistrict"
+                id="subdistrict"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                placeholder="ป้อน รถ"
+                @change="updatePostcode"
                 required
-              />
+              >
+                <option value="" disabled selected>กรุณาเลือกตำบล</option>
+                <option
+                  v-for="tambon in tambons"
+                  :value="tambon.id"
+                  :key="tambon.id"
+                  :data-postcode="tambon.zip_code"
+                >
+                  {{ tambon.name_th }}
+                </option>
+              </select>
             </div>
 
-            <!-- Customer vehicle detail -->
-            <div class="col-span-2">
+            <!-- Customer postcode -->
+            <div v-if="formData.province" class="col-span-1 lg:col-span-2">
               <label
-                for="vehicle_detail"
+                for="postcode"
                 class="block mb-2 text-sm font-medium text-gray-900"
-                >รายละเอียดรถ</label
+                >รหัสไปรษณีย์</label
               >
               <input
-                v-model="formData.vehicle_detail"
+                v-model="formData.postcode"
                 type="text"
-                name="vehicle_detail"
-                id="vehicle_detail"
+                name="postcode"
+                id="postcode"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                placeholder="ป้อน รายละเอียดรถ"
-                required
-              />
-            </div>
-
-            <!-- Customer class -->
-            <div class="col-span-2">
-              <label
-                for="class"
-                class="block mb-2 text-sm font-medium text-gray-900"
-                >ชนิด</label
-              >
-              <input
-                v-model="formData.class"
-                type="text"
-                name="class"
-                id="class"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                placeholder="ป้อน ชนิด"
-                required
-              />
-            </div>
-
-            <!-- Customer vendor track -->
-            <div class="col-span-2">
-              <label
-                for="vendor_track"
-                class="block mb-2 text-sm font-medium text-gray-900"
-                >Vendor Track</label
-              >
-              <input
-                v-model="formData.vendor_track"
-                type="text"
-                name="vendor_track"
-                id="vendor_track"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                placeholder="ป้อน Vendor Track"
-                required
+                readonly
               />
             </div>
           </div>
@@ -266,29 +275,40 @@ import Swal from "sweetalert2";
 export default {
   data() {
     return {
+      empId: null,
       formData: {
         id_card: "",
-        fullname_th: "",
-        full_name_en: "",
-        birthday_th: "",
-        birthday_en: "",
-        religion: "",
+        level: "",
+        fullname: "",
         address: "",
-        date_of_issue: "",
-        date_of_expiry: "",
-        vehicle: "",
-        vehicle_detail: "",
-        class: "",
-        vendor_track: "",
+        tel: "",
+        subdistrict: "",
+        district: "",
+        province: "",
+        postcode: "",
+        vehicle_code: "",
+        emp: null,
       },
+      provinces: [],
+      amphures: [],
+      tambons: [],
+      classOptions: [],
     };
   },
 
   methods: {
+    updatePostcode() {
+      const selectedTambon = this.tambons.find(
+        (tambon) => tambon.id === this.formData.subdistrict
+      );
+      if (selectedTambon) {
+        this.formData.postcode = selectedTambon.zip_code;
+      }
+    },
+
     async AddCustomer() {
       try {
-        // แสดงข้อความยืนยันการเพิ่มข้อมูลลูกค้า
-        await Swal.fire({
+        const { isConfirmed } = await Swal.fire({
           title: "ยืนยันการเพิ่ม",
           text: "คุณแน่ใจหรือไม่ที่จะเพิ่มข้อมูล?",
           icon: "info",
@@ -297,28 +317,99 @@ export default {
           cancelButtonColor: "#d33",
           confirmButtonText: "เพิ่ม",
           cancelButtonText: "ยกเลิก",
-        }).then(async (result) => {
-          if (result.isConfirmed) {
-            await axios.post(
-              `${import.meta.env.VITE_API_CUSTOMER}`,
-              this.formData
-            );
-            {
-              await Swal.fire("เพิ่มข้อมูลสําเร็จ!", "", "success");
-              this.$emit("close");
-            }
-            await window.location.reload();
-          }
         });
+
+        if (isConfirmed) {
+          await axios.post(
+            `${import.meta.env.VITE_API_ALL}customer`,
+            this.formData
+          );
+          Swal.fire("เพิ่มข้อมูลสําเร็จ!", "", "success");
+          this.$emit("close");
+          this.$emit("added");
+        }
       } catch (error) {
-        console.error("Error updating data:", error);
-        Swal.fire("Error!", "Failed to update data", "error");
+        console.error("Error creating data:", error);
+        Swal.fire("Error!", "Failed to create data", "error");
+      }
+    },
+
+    async fetchClass() {
+      try {
+        const response = await axios.get(
+          `http://147.50.183.57:9030/antiques/product/price`
+        );
+        this.classOptions = response.data.data;
+        console.log(this.classOptions);
+      } catch (error) {
+        console.error("Error fetching class:", error);
       }
     },
 
     ModalClose() {
       this.$emit("close");
     },
+
+    async fetchProvinces() {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_VUE_APP_PROVINCE}`
+        );
+        this.provinces = response.data;
+      } catch (error) {
+        console.error("Error fetching provinces:", error);
+      }
+    },
+
+    async fetchAmphures() {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_VUE_APP_AMPHURE}`
+        );
+        const selectedProvinceId = this.formData.province;
+        this.amphures = response.data.filter(
+          (amphure) => amphure.province_id === selectedProvinceId
+        );
+      } catch (error) {
+        console.error("Error fetching amphures:", error);
+      }
+    },
+
+    async fetchTambons() {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_VUE_APP_TAMBON}`
+        );
+        const selectedAmphureId = this.formData.district;
+        this.tambons = response.data.filter(
+          (tambon) => tambon.amphure_id === selectedAmphureId
+        );
+      } catch (error) {
+        console.error("Error fetching tambons:", error);
+      }
+    },
+
+    onProvinceChange() {
+      this.fetchAmphures();
+    },
+
+    onAmphureChange() {
+      this.fetchTambons();
+    },
+  },
+
+  watch: {
+    // เมื่อมีการเลือกจังหวัดเกิดขึ้น
+    "formData.province": "onProvinceChange",
+    // เมื่อมีการเลือกอำเภอเกิดขึ้น
+    "formData.district": "onAmphureChange",
+  },
+
+  mounted() {
+    this.empId = this.$store.getters.id;
+    this.formData.emp = this.empId;
+    this.fetchProvinces();
+    this.fetchClass();
   },
 };
 </script>

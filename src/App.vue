@@ -1,23 +1,33 @@
 <template>
-  <div id="app" class="text-black bg-[#B9DCA9] h-screen w-screen">
-    <div v-if="userRole === 'admin'">
-      <nav class="z-50">
+  <div id="app" class="text-black bg-gradient-to-r from-green-200 to-green-100 w-full min-h-screen flex flex-col">
+    <div v-if="userRole === 'admin'" class="flex-grow">
+      <nav class="sticky top-0 z-50 shadow-md">
         <BarAdmin />
       </nav>
-      <router-view />
+      <main class="p-4">
+        <router-view />
+      </main>
     </div>
 
-    <div v-if="userRole === 'employee'">
-      <nav>
+    <div v-else-if="userRole === 'employee'" class="flex-grow">
+      <nav class="sticky top-0 z-50 shadow-md">
         <BarEmployee />
       </nav>
+      <main class="p-4">
+        <router-view />
+      </main>
+    </div>
+
+    <div v-else class="flex-grow">
       <router-view />
     </div>
 
-    <div v-else-if="!isLoggedIn">
-      <router-view />
-    </div>
+    <footer class="bg-green-800 text-white text-center py-4">
+      &copy; {{ currentYear }} บริษัท ซีเอ็น กรีน แพลนเน็ต จํากัด
+    </footer>
   </div>
+  <Toast />
+  <ConfirmDialog />
 </template>
 
 <script>
@@ -38,21 +48,21 @@ export default {
     userRole() {
       return this.$store.getters.role;
     },
+    currentYear() {
+      return new Date().getFullYear();
+    },
   },
   created() {
-    console.log(this.$store.getters.logedIn);
     if (localStorage.getItem("token")) {
       const decode = jwtDecode(localStorage.getItem("token"));
-      console.log("Decoded token:", decode);
       if (decode && decode.row) {
-        console.log("Token user_id:", decode._id);
-        const data_login = {
+        const dataLogin = {
           logedIn: true,
           role: decode.row,
           id: decode._id,
           token: localStorage.getItem("token"),
         };
-        this.$store.commit("setLogin", data_login);
+        this.$store.commit("setLogin", dataLogin);
       } else {
         localStorage.clear();
         this.$router.push("/");

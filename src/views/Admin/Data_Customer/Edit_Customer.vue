@@ -1,18 +1,18 @@
 <template>
   <div
-    class="popup-overlay fixed top-0 left-0 z-50 w-full h-full bg-black bg-opacity-20 flex justify-center items-center"
+    class="popup-overlay fixed top-0 left-0 z-50 w-full h-full bg-black bg-opacity-50 flex justify-center items-center"
   >
     <!-- Popup content -->
     <div
       class="popup-content bg-white border border-black rounded-lg overflow-auto max-h-[80vh]"
     >
       <div>
-        <!-- Form for adding an employee -->
-        <form @submit.prevent="EditEmployee" class="p-6">
+        <!-- Form for adding a customer -->
+        <form @submit.prevent="editCustomer" class="p-6">
           <!-- Modal header -->
           <div class="flex items-center justify-between pb-4 border-b">
             <h3 class="text-lg font-semibold">
-              แก้ไขพนักงาน: {{ formData.employee_name }}
+              เพิ่มลูกค้า: {{ formData.fullname }}
             </h3>
 
             <!-- Close button -->
@@ -37,126 +37,185 @@
             </button>
           </div>
 
-          <!-- Employee details -->
+          <!-- Customer details -->
           <div class="grid gap-6 mb-6 md:grid-cols-4">
-            <!-- Employee name -->
+            <!-- Customer full name -->
             <div class="col-span-2">
               <label
-                for="employee_name"
+                for="id_card"
                 class="block mb-2 text-sm font-medium text-gray-900"
-                >ชื่อ</label
+                >บัตรประชาชน</label
               >
               <input
-                v-model="formData.employee_name"
+                v-model="formData.id_card"
                 type="text"
-                name="employee_name"
-                id="employee_name"
+                name="id_card"
+                id="id_card"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                placeholder="ป้อน ชื่อพนักงาน"
+                placeholder="ป้อน บัตรประชาชน"
                 required
               />
             </div>
 
-            <!-- Employee phone -->
+            <!-- Customer full name -->
             <div class="col-span-2">
               <label
-                for="employee_phone"
+                for="level"
                 class="block mb-2 text-sm font-medium text-gray-900"
-                >เบอร์โทร</label
+                >ระดับ</label
               >
               <input
-                v-model="formData.employee_phone"
-                name="employee_phone"
-                id="employee_phone"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                placeholder="ป้อน เบอร์โทร 10 หลัก"
-                required
-                minlength="10"
-                maxlength="10"
-                @input="validatePhoneNumber"
-              />
-            </div>
-
-            <!-- Employee position -->
-            <div class="col-span-2">
-              <label
-                for="employee_position"
-                class="block mb-2 text-sm font-medium text-gray-900"
-                >เลือกตำแหน่ง</label
-              >
-              <select
-                v-model="formData.employee_position"
-                name="employee_position"
-                id="employee_position"
-                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                required
-              >
-                <option value="" disabled selected>กรุณาเลือกตำแหน่ง</option>
-                <option value="owner">เจ้าของ</option>
-                <option value="cashier">พนักงานขาย</option>
-                <option value="employee">พนักงานทั่วไป</option>
-              </select>
-            </div>
-
-            <!-- Employee status -->
-            <div class="col-span-2 flex items-center">
-              <label
-                for="employee_status"
-                class="block mr-2 text-sm font-medium text-gray-900"
-                >เลือกสถานะ</label
-              >
-
-              <!-- Switch for employee status -->
-              <label class="switch">
-                <input
-                  type="checkbox"
-                  v-model="formData.employee_status"
-                  class="hidden"
-                />
-                <div class="slider round"></div>
-              </label>
-
-              <!-- Text indicating status -->
-              <span
-                class="text-sm ml-2 font-medium text-gray-900"
-                v-text="formData.employee_status ? 'เปิด' : 'ปิด'"
-              ></span>
-            </div>
-
-            <!-- Employee username -->
-            <div class="col-span-2">
-              <label
-                for="employee_username"
-                class="block mb-2 text-sm font-medium text-gray-900"
-                >ชื่อผู้ใช้</label
-              >
-              <input
-                v-model="formData.employee_username"
+                v-model="formData.level"
                 type="text"
-                name="employee_username"
-                id="employee_username"
+                name="level"
+                id="level"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                placeholder="ป้อน ชื่อผู้ใช้"
+                placeholder="ป้อน ระดับ"
                 required
               />
             </div>
 
-            <!-- Employee password -->
+            <!-- Customer birthday -->
             <div class="col-span-2">
               <label
-                for="employee_password"
+                for="fullname"
                 class="block mb-2 text-sm font-medium text-gray-900"
-                >รหัสผ่าน</label
+                >ชื่อเต็ม</label
               >
               <input
-                v-model="formData.employee_password"
-                type="password"
-                name="employee_password"
-                id="employee_password"
+                v-model="formData.fullname"
+                type="text"
+                name="fullname"
+                id="fullname"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
-                placeholder="ป้อน รหัสผ่าน 6 ตัวอักษรขึ้นไป"
+                placeholder="ป้อน วันเกิด"
                 required
-                minlength="6"
+              />
+            </div>
+
+            <!-- Customer religion -->
+            <div class="col-span-2">
+              <label
+                for="address"
+                class="block mb-2 text-sm font-medium text-gray-900"
+                >ที่อยู่</label
+              >
+              <input
+                v-model="formData.address"
+                type="text"
+                name="adress"
+                id="adress"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                placeholder="ป้อน ที่อยู่"
+                required
+              />
+            </div>
+
+            <!-- Customer address -->
+            <div class="col-span-2">
+              <label
+                for="subdistrict"
+                class="block mb-2 text-sm font-medium text-gray-900"
+                >ตำบล</label
+              >
+              <input
+                v-model="formData.subdistrict"
+                type="text"
+                name="subdistrict"
+                id="subdistrict"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                placeholder="ป้อน ตำบล"
+                required
+              />
+            </div>
+
+            <!-- Customer date of issue -->
+            <div class="col-span-2">
+              <label
+                for="district"
+                class="block mb-2 text-sm font-medium text-gray-900"
+                >อำเภอ</label
+              >
+              <input
+                v-model="formData.district"
+                type="text"
+                name="district"
+                id="district"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                placeholder="ป้อน อำเภอ"
+                required
+              />
+            </div>
+
+            <!-- Customer date of expiry -->
+            <div class="col-span-2">
+              <label
+                for="province"
+                class="block mb-2 text-sm font-medium text-gray-900"
+                >จังหวัด</label
+              >
+              <input
+                v-model="formData.province"
+                type="text"
+                name="province"
+                id="province"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                placeholder="ป้อน จังหวัด"
+                required
+              />
+            </div>
+
+            <!-- Customer vehicle -->
+            <div class="col-span-2">
+              <label
+                for="postcode"
+                class="block mb-2 text-sm font-medium text-gray-900"
+                >รหัสไปรษณีย์</label
+              >
+              <input
+                v-model="formData.postcode"
+                type="text"
+                name="postcode"
+                id="postcode"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                placeholder="ป้อน รหัสไปรษณีย์"
+                required
+              />
+            </div>
+
+            <!-- Customer vehicle detail -->
+            <div class="col-span-2">
+              <label
+                for="vehicle_code"
+                class="block mb-2 text-sm font-medium text-gray-900"
+                >ป้ายทะเบียน</label
+              >
+              <input
+                v-model="formData.vehicle_code"
+                type="text"
+                name="vehicle_code"
+                id="vehicle_code"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                placeholder="ป้อน ป้ายทะเบียน"
+                required
+              />
+            </div>
+
+            <!-- Customer class -->
+            <div class="col-span-2">
+              <label
+                for="emp"
+                class="block mb-2 text-sm font-medium text-gray-900"
+                >พนักงาน</label
+              >
+              <input
+                v-model="formData.emp"
+                type="text"
+                name="emp"
+                id="emp"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                placeholder="ป้อน พนักงาน"
+                required
               />
             </div>
           </div>
@@ -167,9 +226,8 @@
               type="submit"
               class="mb-2 md:mb-0 bg-indigo-500 border px-5 py-2 text-sm shadow-sm font-medium tracking-wider text-white rounded-md hover:shadow-lg hover:bg-indigo-600"
             >
-              บันทึก
+              เพิ่ม
             </button>
-
             <button
               @click.prevent="ModalClose"
               class="mb-2 md:mb-0 bg-red-500 border px-5 py-2 text-sm shadow-sm font-medium tracking-wider text-white rounded-md hover:shadow-lg hover:bg-red-600"
@@ -190,28 +248,32 @@ import Swal from "sweetalert2";
 export default {
   name: "EditPopup",
   props: {
-    employee: Object,
+    customer: Object,
   },
   data() {
     return {
       formData: {
-        employee_name: "",
-        employee_phone: "",
-        employee_position: "",
-        employee_status: "",
-        employee_username: "",
-        employee_password: "",
+        id_card: "",
+        level: "",
+        fullname: "",
+        address: "",
+        subdistrict: "",
+        district: "",
+        province: "",
+        postcode: "",
+        vehicle_code: "",
+        emp: "",
       },
     };
   },
 
   created() {
     // กำหนดค่าให้ formData ตามข้อมูล Employee
-    this.formData = { ...this.employee };
+    this.formData = { ...this.customer };
   },
 
   methods: {
-    async EditEmployee() {
+    async editCustomer() {
       try {
         await Swal.fire({
           title: "ยืนยันการแก้ไข",
@@ -225,14 +287,14 @@ export default {
         }).then(async (result) => {
           if (result.isConfirmed) {
             await axios.put(
-              `${import.meta.env.VITE_API_EMPLOYEE}${this.employee._id}`,
+              `${import.meta.env.VITE_API_ALL}customer/${this.customer._id}`,
               this.formData
             );
             {
               await Swal.fire("แก้ไขข้อมูลสําเร็จ!", "", "success");
               this.$emit("close");
+              this.$emit("edited");
             }
-            await window.location.reload();
           }
         });
       } catch (error) {
@@ -244,33 +306,9 @@ export default {
     ModalClose() {
       this.$emit("close");
     },
-
-    validatePhoneNumber() {
-      // ตรวจสอบความยาวของเบอร์โทรไม่เกิน 10 ตัว
-      if (this.formData.employee_phone.length >= 10) {
-        this.formData.employee_phone = this.formData.employee_phone.slice(
-          0,
-          10
-        );
-      }
-      // ตรวจสอบว่าเป็นตัวเลขหรือไม่
-      const regex = /^[0-9]*$/;
-      if (!regex.test(this.formData.employee_phone)) {
-        // ถ้าไม่ใช่ตัวเลข ลบตัวอักษรที่ไม่ใช่ตัวเลขทิ้ง
-        this.formData.employee_phone = this.formData.employee_phone.replace(
-          /\D/g,
-          ""
-        );
-      }
-    },
-
-    toggleCheckbox() {
-      this.formData.employee_status = !this.formData.employee_status;
-    },
   },
 };
 </script>
-
 
 <style scoped>
 .popup-content {

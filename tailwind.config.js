@@ -1,13 +1,15 @@
-module.exports = {
+/** @type {import('tailwindcss').Config} */
+export default {
   content: [
-    // Example content paths...
-    "./public/**/*.html",
+    "./index.html",
     "./src/**/*.{vue,js,ts,jsx,tsx}",
-    "./node_modules/flowbite/**/*.js",
+    "./node_modules/flowbite/**/*.js"
   ],
-  darkMode: "media", // or 'media' or 'class'
   theme: {
     extend: {},
   },
-  plugins: [],
-};
+  plugins: [
+    require('flowbite/plugin')
+  ],
+}
+

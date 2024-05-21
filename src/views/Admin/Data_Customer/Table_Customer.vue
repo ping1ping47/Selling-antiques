@@ -6,13 +6,29 @@
     </div>
 
     <div class="flex justify-end py-2 px-3">
+      <div class="mr-4">
+        <input
+          v-model="searchTerm"
+          type="text"
+          class="border border-gray-300 rounded-md py-2 px-4"
+          placeholder="ค้นหาชื่อหรือเบอร์โทรหรือป้ายทะเบียน"
+        />
+      </div>
+    </div>
+
+    <div class="flex justify-end py-2 px-3">
       <button
         @click="openAddPopup()"
         class="focus:ring-2 focus:ring-offset-2 mt-4 sm:mt-0 inline-flex items-start justify-start px-6 py-3 bg-indigo-600 hover:bg-indigo-500 focus:outline-none rounded"
       >
         <p class="text-sm font-medium leading-none text-white">เพิ่มลูกค้า</p>
       </button>
-      <Add v-if="showAddPopup" @close="closeAddPopup" @add="addCustomer" />
+      <Add
+        v-if="showAddPopup"
+        @close="closeAddPopup"
+        @add="addCustomer"
+        @added="fetchCustomers"
+      />
     </div>
     <div class="px-3 py-4 flex justify-center">
       <div class="overflow-x-auto w-full">
@@ -20,34 +36,34 @@
           <tbody class="border border-green-300">
             <tr class="border-b">
               <th class="text-left p-3 px-5">ลำดับ</th>
-              <th class="text-left p-3 px-5">ชื่อ</th>
-              <th class="text-left p-3 px-5">วันเกิด</th>
-              <th class="text-left p-3 px-5">ศาสนา</th>
+              <th class="text-left p-3 px-5">บัตรประชาชน</th>
+              <th class="text-left p-3 px-5">ระดับ</th>
+              <th class="text-left p-3 px-5">ชื่อเต็ม</th>
               <th class="text-left p-3 px-5">ที่อยู่</th>
-              <th class="text-left p-3 px-5">วันออกบัตร</th>
-              <th class="text-left p-3 px-5">วันหมดอายุ</th>
-              <th class="text-left p-3 px-5">รถ</th>
-              <th class="text-left p-3 px-5">รายละเอียดรถ</th>
-              <th class="text-left p-3 px-5">ชนิด</th>
-              <th class="text-left p-3 px-5">Vendor Track</th>
+              <th class="text-left p-3 px-5">ตำบล</th>
+              <th class="text-left p-3 px-5">อำเภอ</th>
+              <th class="text-left p-3 px-5">จังหวัด</th>
+              <th class="text-left p-3 px-5">รหัสไปรษณีย์</th>
+              <th class="text-left p-3 px-5">ป้ายทะเบียน</th>
+              <th class="text-left p-3 px-5">พนักงาน</th>
               <th class="text-left p-3 px-5">จัดการ</th>
             </tr>
             <tr
-              v-for="(customer, index) in customers"
+              v-for="(customer, index) in filteredCustomers"
               :key="customer._id"
               class="border-b hover:bg-gray-300 bg-gray-100 border border-green-300"
             >
               <td class="p-3 px-5">{{ index + 1 }}</td>
-              <td class="p-3 px-5">{{ customer.fullname_th }}</td>
-              <td class="p-3 px-5">{{ customer.birthday_th }}</td>
-              <td class="p-3 px-5">{{ customer.religion }}</td>
+              <td class="p-3 px-5">{{ customer.id_card }}</td>
+              <td class="p-3 px-5">{{ customer.level }}</td>
+              <td class="p-3 px-5">{{ customer.fullname }}</td>
               <td class="p-3 px-5">{{ customer.address }}</td>
-              <td class="p-3 px-5">{{ customer.date_of_issue }}</td>
-              <td class="p-3 px-5">{{ customer.date_of_expiry }}</td>
-              <td class="p-3 px-5">{{ customer.vehicle }}</td>
-              <td class="p-3 px-5">{{ customer.vehicle_detail }}</td>
-              <td class="p-3 px-5">{{ customer.class }}</td>
-              <td class="p-3 px-5">{{ customer.vendor_track }}</td>
+              <td class="p-3 px-5">{{ customer.subdistrict }}</td>
+              <td class="p-3 px-5">{{ customer.district }}</td>
+              <td class="p-3 px-5">{{ customer.province }}</td>
+              <td class="p-3 px-5">{{ customer.postcode }}</td>
+              <td class="p-3 px-5">{{ customer.vehicle_code }}</td>
+              <td class="p-3 px-5">{{ customer.emp }}</td>
               <td class="p-3 px-5 flex justify-center">
                 <button
                   @click="viewCustomer(customer)"
@@ -84,6 +100,7 @@
                   :customer="selectedCustomer"
                   @close="closeEditPopup"
                   @update="updatedCustomer"
+                  @edited="fetchCustomers"
                 />
 
                 <button
@@ -123,16 +140,36 @@ export default {
       showEditPopup: false,
       showViewPopup: false,
       selectedCustomer: null,
+      searchTerm: "", // เพิ่มตัวแปรสำหรับค้นหา
     };
   },
   created() {
     this.fetchCustomers();
   },
 
+  computed: {
+    filteredCustomers() {
+      return this.customers.filter(
+        (customer) =>
+          customer.fullname
+            .toLowerCase()
+            .includes(this.searchTerm.toLowerCase()) ||
+          customer.id_card
+            .toLowerCase()
+            .includes(this.searchTerm.toLowerCase()) ||
+          customer.vehicle_code
+            .toLowerCase()
+            .includes(this.searchTerm.toLowerCase())
+      );
+    },
+  },
+
   methods: {
     async fetchCustomers() {
       try {
-        const response = await axios.get(import.meta.env.VITE_API_CUSTOMER);
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_ALL}customer`
+        );
         if (
           response.status === 200 &&
           response.data &&
@@ -166,7 +203,7 @@ export default {
       if (confirmResult.isConfirmed) {
         try {
           const response = await axios.delete(
-            import.meta.env.VITE_API_CUSTOMER + `${_id}`
+            `${import.meta.env.VITE_API_ALL}customer/${_id}`
           );
           if (response.status === 200) {
             this.fetchCustomers();
@@ -174,12 +211,6 @@ export default {
               icon: "success",
               title: "ลบลูกค้าสำเร็จ",
               showConfirmButton: true,
-            });
-          } else {
-            Swal.fire({
-              icon: "error",
-              title: "เกิดข้อผิดพลาดในการลบลูกค้า",
-              text: "กรุณาลองใหม่อีกครั้ง",
             });
           }
         } catch (error) {

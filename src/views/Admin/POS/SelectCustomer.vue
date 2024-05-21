@@ -47,60 +47,80 @@
               </button>
             </div>
             <h3
-              class="text-lg leading-6 font-medium text-gray-900"
-              id="modal-title"
+              class="leading-6 font-medium text-gray-900 text-4xl"
+              id="modal-title "
             >
               รายการลูกค้า
             </h3>
-            <div class="mt-2">
-              <table class="min-w-full divide-y divide-gray-200">
+
+            <div class="flex items-center mb-4">
+              <label for="customer-code" class="text-xl text-black mr-5 p-5"
+                >เบอร์โทรศัพท์</label
+              >
+              <input
+                type="text"
+                id="customer-code"
+                v-model="search"
+                class="border border-green-300 text-lg text-gray-900 rounded-lg focus:ring-green-500 focus:border-green-500 px-2 py-1 transition duration-300 ease-in-out"
+                placeholder="ค้นหา เบอร์โทรศัพท์"
+              />
+              <button
+                @click="searchCustomers"
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-4"
+              >
+                ค้นหา
+              </button>
+            </div>
+
+            <div class="mt-2 overflow-x-auto">
+              <table class="min-w-full divide-y divide-gray-200 text-black">
                 <thead class="bg-gray-50">
                   <tr>
                     <th
                       scope="col"
-                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      class="px-6 py-3 text-left text-2xl font-medium text-gray-500 uppercase tracking-wider flex justify-center"
                     >
-                      รหัสลูกค้า
+                      ระดับ
                     </th>
                     <th
                       scope="col"
-                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      class="px-6 py-3 text-left text-2xl font-medium text-gray-500 uppercase tracking-wider"
                     >
                       รหัสสมาชิก
                     </th>
                     <th
                       scope="col"
-                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      class="px-6 py-3 text-left text-2xl font-medium text-gray-500 uppercase tracking-wider"
                     >
                       ชื่อ-นามสกุล
                     </th>
                     <th
                       scope="col"
-                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      class="px-6 py-3 text-left text-2xl font-medium text-gray-500 uppercase tracking-wider"
                     >
                       เบอร์โทร
                     </th>
                     <th
                       scope="col"
-                      class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      class="px-6 py-3 text-left text-2xl font-medium text-gray-500 uppercase tracking-wider"
                     >
                       เลือก
                     </th>
                   </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200 text-black">
-                  <tr v-for="customer in customers" :key="customer.id">
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      {{ customer.id }}
+                  <tr v-for="customer in filteredCustomers" :key="customer._id">
+                    <td class="px-6 py-4 whitespace-nowrap flex justify-center">
+                      {{ customer.level }}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                      {{ customer.member_id }}
+                      {{ customer.id_card }}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                       {{ customer.fullname }}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                      {{ customer.phone }}
+                      {{ customer.tel }}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                       <button
@@ -122,18 +142,43 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
-  name: "ListCustomerPopup",
-  props: {
-    customers: {
-      type: Array,
-      required: true,
+  data() {
+    return {
+      customers: [],
+      search: "",
+    };
+  },
+  computed: {
+    filteredCustomers() {
+      return this.customers.filter((customer) =>
+        customer.tel.includes(this.search)
+      );
     },
   },
   methods: {
+    async fetchCustomers() {
+      try {
+        const response = await axios.get(
+          "http://147.50.183.57:9030/antiques/customer"
+        );
+        this.customers = response.data.data;
+      } catch (error) {
+        console.error("Error fetching customers:", error);
+      }
+    },
     handleSelectCustomer(customer) {
       this.$emit("select-customer", customer);
     },
+    searchCustomers() {
+      // Since we are using computed property `filteredCustomers`,
+      // the list will be automatically updated based on the `search` value.
+    },
+  },
+  mounted() {
+    this.fetchCustomers();
   },
 };
 </script>
