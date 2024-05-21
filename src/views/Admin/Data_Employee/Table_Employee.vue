@@ -1,8 +1,18 @@
 <template>
-  <!-- component -->
   <div class="text-2xl">
     <div class="p-4">
       <h1 class="text-3xl">พนักงาน</h1>
+    </div>
+
+    <div class="flex justify-end py-2 px-3">
+      <div class="mr-4">
+        <input
+          v-model="searchTerm"
+          type="text"
+          class="border border-gray-300 rounded-md py-2 px-4"
+          placeholder="ค้นหาชื่อหรือเบอร์โทร"
+        />
+      </div>
     </div>
 
     <div class="flex justify-end py-2 px-3">
@@ -12,7 +22,12 @@
       >
         <p class="text-sm font-medium leading-none text-white">เพิ่มพนักงาน</p>
       </button>
-      <Add v-if="showAddPopup" @close="closeAddPopup" @add="addEmployee" />
+      <AddEmployee
+        v-if="showAddPopup"
+        @close="closeAddPopup"
+        @add="addEmployee"
+        @added="fetchEmployees"
+      />
     </div>
 
     <div class="px-4 flex justify-center">
@@ -32,9 +47,7 @@
               :key="employee._id"
               class="border-b hover:bg-gray-300 bg-gray-100 border border-green-300"
             >
-              <td class="p-3 px-5">
-                {{ (currentPage - 1) * perPage + index + 1 }}
-              </td>
+              <td class="p-3 px-5">{{ index + 1 }}</td>
               <td class="p-3 px-5">{{ employee.employee_name }}</td>
               <td class="p-3 px-5">{{ employee.employee_phone }}</td>
               <td class="p-3 px-5">{{ employee.employee_position }}</td>
@@ -47,9 +60,9 @@
                   type="button"
                   class="text-sm bg-green-500 hover:bg-green-700 text-white py-1 px-2 ml-3 rounded focus:outline-none focus:shadow-outline"
                 >
-                  ข้อมูล</button
-                ><!-- View Employee Popup -->
-                <View
+                  ข้อมูล
+                </button>
+                <ViewEmployee
                   v-if="showViewPopup"
                   :employee="selectedEmployee"
                   @close="closeViewPopup"
@@ -62,12 +75,12 @@
                 >
                   แก้ไข
                 </button>
-                <!-- Edit Employee Popup -->
-                <Edit
+                <EditEmployee
                   v-if="showEditPopup"
                   :employee="selectedEmployee"
                   @close="closeEditPopup"
                   @update="updateEmployee"
+                  @edited="fetchEmployees"
                 />
 
                 <button
@@ -84,61 +97,20 @@
       </div>
     </div>
   </div>
-
-  <!-- Pagination Controls -->
-  <div class="fixed bottom-0 left-0 right-0 px-3 bg-green-200">
-    <div class="container md:mb-8 pt-8 mx-auto flex justify-center select-none">
-      <a
-        @click="prevPage"
-        :class="{ 'cursor-not-allowed text-gray-500': currentPage === 1 }"
-        class="block border border-y-amber-900 rounded-l px-4 py-2 hover:bg-gray-200 text-gray-900"
-        href="#"
-        rel="prev"
-      >
-        &larr; ก่อนหน้า
-      </a>
-
-      <a
-        v-for="page in lastPage"
-        :key="page"
-        @click="goToPage(page)"
-        :class="{
-          'bg-indigo-500 text-white': page === currentPage,
-          'hover:bg-gray-500 text-gray-600': page !== currentPage,
-        }"
-        class="block border border-l-0 border-r-0 px-4 py-2 cursor-pointer"
-        href="#"
-      >
-        {{ page }}
-      </a>
-
-      <a
-        @click="nextPage"
-        :class="{
-          'cursor-not-allowed text-gray-500': currentPage === lastPage,
-        }"
-        class="block border border-y-amber-900 px-4 py-2 hover:bg-gray-200 text-gray-900"
-        href="#"
-        rel="next"
-      >
-        ถัดไป &rarr;
-      </a>
-    </div>
-  </div>
 </template>
 
 <script>
 import axios from "axios";
 import Swal from "sweetalert2";
-import Add from "./Add_Employee.vue";
-import Edit from "./Edit_Employee.vue";
-import View from "./View_Employee.vue";
+import AddEmployee from "./Add_Employee.vue";
+import EditEmployee from "./Edit_Employee.vue";
+import ViewEmployee from "./View_Employee.vue";
 
 export default {
   components: {
-    Add,
-    Edit,
-    View,
+    AddEmployee,
+    EditEmployee,
+    ViewEmployee,
   },
 
   data() {
@@ -148,54 +120,39 @@ export default {
       showEditPopup: false,
       showViewPopup: false,
       selectedEmployee: null,
-      // ข้อมูล pagination
-      currentPage: 1,
-      perPage: 10, // จำนวนรายการต่อหน้า
+      searchTerm: "",
     };
   },
+
   created() {
     this.fetchEmployees();
   },
 
   computed: {
-    totalEmployees() {
-      return this.employees.length;
-    },
-    lastPage() {
-      return Math.ceil(this.totalEmployees / this.perPage);
-    },
     displayedEmployees() {
-      const start = (this.currentPage - 1) * this.perPage;
-      const end = start + this.perPage;
-      return this.employees.slice(start, end);
+      const filtered = this.employees.filter(
+        (employee) =>
+          employee.employee_name
+            .toLowerCase()
+            .includes(this.searchTerm.toLowerCase()) ||
+          employee.employee_phone
+            .toLowerCase()
+            .includes(this.searchTerm.toLowerCase())
+      );
+      return filtered;
     },
   },
 
   methods: {
-    prevPage() {
-      if (this.currentPage > 1) {
-        this.currentPage--;
-      }
-    },
-    nextPage() {
-      if (this.currentPage < this.lastPage) {
-        this.currentPage++;
-      }
-    },
-
     async fetchEmployees() {
       try {
-        const response = await axios.get(import.meta.env.VITE_API_EMPLOYEE);
-        if (
-          response.status === 200 &&
-          response.data &&
-          Array.isArray(response.data.data)
-        ) {
-          this.employees = response.data.data;
+        const res = await axios.get(`${import.meta.env.VITE_API_ALL}/employee`);
+        if (res.status === 200 && res.data && Array.isArray(res.data.data)) {
+          this.employees = res.data.data;
         } else {
           console.error(
             "Invalid response format or empty data array:",
-            response.data
+            res.data
           );
         }
       } catch (error) {
@@ -218,10 +175,10 @@ export default {
 
       if (confirmResult.isConfirmed) {
         try {
-          const response = await axios.delete(
-            import.meta.env.VITE_API_EMPLOYEE + `${_id}`
+          const res = await axios.delete(
+            `${import.meta.env.VITE_API_ALL}/employee/${_id}`
           );
-          if (response.status === 200) {
+          if (res.status === 200) {
             this.fetchEmployees();
             Swal.fire({
               icon: "success",
@@ -245,7 +202,6 @@ export default {
         }
       }
     },
-
     openAddPopup() {
       this.showAddPopup = true;
     },
@@ -277,7 +233,7 @@ export default {
       this.showEditPopup = false;
     },
 
-    async updateEmployee(updatedEmployee) {
+    updateEmployee(updatedEmployee) {
       const index = this.employees.findIndex(
         (emp) => emp._id === updatedEmployee._id
       );

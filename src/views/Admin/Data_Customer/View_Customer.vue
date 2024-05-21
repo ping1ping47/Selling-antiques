@@ -12,7 +12,7 @@
           <!-- Modal header -->
           <div class="flex items-center justify-between pb-4 border-b">
             <h3 class="text-lg font-semibold">
-              ข้อมูลพนักงาน: {{ formData.employee_name }}
+              ข้อมูลพนักงาน: {{ formData.fullname }}
             </h3>
 
             <!-- Close button -->
@@ -42,56 +42,141 @@
             <!-- Employee name -->
             <div class="col-span-2">
               <label
-                for="employee_name"
+                for="id_card"
                 class="block mb-2 text-sm font-medium text-gray-900"
-                >ชื่อ</label
+                >บัตรประชาชน</label
               >
               <span
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
               >
-                {{ formData.employee_name }}
+                {{ formData.id_card }}
               </span>
             </div>
 
             <!-- Employee phone -->
             <div class="col-span-2">
               <label
-                for="employee_phone"
+                for="level"
                 class="block mb-2 text-sm font-medium text-gray-900"
-                >เบอร์โทร</label
+                >ระดับ</label
               >
               <span
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
               >
-                {{ formData.employee_phone }}
+                {{ formData.level }}
               </span>
             </div>
 
             <!-- Employee position -->
             <div class="col-span-2">
               <label
-                for="employee_position"
+                for="fullname"
                 class="block mb-2 text-sm font-medium text-gray-900"
-                >ตำแหน่ง</label
+                >ชื่อเต็ม</label
               >
               <span
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
               >
-                {{ formData.employee_position }}
+                {{ formData.fullname }}
               </span>
             </div>
 
             <!-- Employee username -->
             <div class="col-span-2">
               <label
-                for="employee_username"
+                for="address"
                 class="block mb-2 text-sm font-medium text-gray-900"
-                >ชื่อผู้ใช้</label
+                >ที่อยู่</label
               >
               <span
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
               >
-                {{ formData.employee_username }}
+                {{ formData.address }}
+              </span>
+            </div>
+
+            <div class="col-span-2">
+              <label
+                for="subdistrict"
+                class="block mb-2 text-sm font-medium text-gray-900"
+                >ตำบล</label
+              >
+              <span
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+              >
+                {{ formData.subdistrict }}
+              </span>
+            </div>
+            <div class="col-span-2">
+              <label
+                for="district"
+                class="block mb-2 text-sm font-medium text-gray-900"
+                >อำเภอ</label
+              >
+              <span
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+              >
+                {{ formData.district }}
+              </span>
+            </div>
+            <div class="col-span-2">
+              <label
+                for="province"
+                class="block mb-2 text-sm font-medium text-gray-900"
+                >จังหวัด</label
+              >
+              <span
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+              >
+                {{ formData.province }}
+              </span>
+            </div>
+            <div class="col-span-2">
+              <label
+                for="postcode"
+                class="block mb-2 text-sm font-medium text-gray-900"
+                >จังหวัด</label
+              >
+              <span
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+              >
+                {{ formData.postcode }}
+              </span>
+            </div>
+            <div class="col-span-2">
+              <label
+                for="vehicle_code"
+                class="block mb-2 text-sm font-medium text-gray-900"
+                >ป้ายทะเบียน</label
+              >
+              <span
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+              >
+                {{ formData.vehicle_code }}
+              </span>
+            </div>
+            <div class="col-span-2">
+              <label
+                for="emp"
+                class="block mb-2 text-sm font-medium text-gray-900"
+                >พนักงาน</label
+              >
+              <span
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+              >
+                {{ formData.emp }}
+              </span>
+            </div>
+            <div class="col-span-2">
+              <label
+                for="timestamp"
+                class="block mb-2 text-sm font-medium text-gray-900"
+                >เวลา</label
+              >
+              <span
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+              >
+                {{ formData.timestamp }}
               </span>
             </div>
           </div>
@@ -115,12 +200,12 @@
 export default {
   name: "EditPopup",
   props: {
-    employee: Object,
+    customer: Object,
   },
 
   created() {
     // กำหนดค่าให้ formData ตามข้อมูล Employee
-    this.formData = { ...this.employee };
+    this.formData = { ...this.customer };
   },
 
   methods: {
@@ -130,7 +215,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 .popup-content {

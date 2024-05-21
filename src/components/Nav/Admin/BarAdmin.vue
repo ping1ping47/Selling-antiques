@@ -1,6 +1,6 @@
 <template>
   <Disclosure as="nav" class="bg-[#378552]" v-slot="{ open }">
-    <div class="mx-auto max-w-auto px-2 sm:px-6 lg:px-8">
+    <div class="mx-auto">
       <div class="relative flex h-16 items-center justify-between">
         <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
           <!-- Mobile menu button -->
@@ -50,23 +50,22 @@
             <img
               src="../../../assets/images/logo1.png"
               alt="logo1"
-              @click="navigateTo('/')"
+              @click="$router.push('/')"
               class="block h-12 w-auto bg-green-100 rounded-lg hover:bg-green-300"
             />
           </div>
-          <div class="hidden sm:ml-6 sm:flex">
+          <div class="hidden sm:ml-6 sm:flex sm:items-center">
             <div class="flex space-x-4">
               <a
                 v-for="item in navigation"
                 :key="item.name"
-                :href="item.href"
+                @click="$router.push(item.href)"
                 :class="[
                   currentPage === item.href
                     ? 'bg-[#115D33] text-white'
                     : 'text-gray-300 hover:bg-[#459843] hover:text-white',
-                  'px-3 py-2 rounded-md text-xl font-semibold tracking-wide',
+                  'px-1 py-3 rounded-md text-base font-semibold tracking-wide',
                 ]"
-                :aria-current="currentPage === item.href ? 'page' : undefined"
                 >{{ item.name }}</a
               >
             </div>
@@ -142,7 +141,7 @@
             item.href === currentPage
               ? 'bg-gray-900 text-white'
               : 'text-gray-300 hover:bg-gray-700 hover:text-white',
-            'block px-3 py-2 rounded-md text-xl font-semibold tracking-wide',
+            'block px-3 py-2 rounded-md text-base font-semibold tracking-wide',
           ]"
           :aria-current="item.href === currentPage ? 'page' : undefined"
           >{{ item.name }}</a
@@ -152,38 +151,51 @@
   </Disclosure>
 </template>
 
-<script setup>
+<script>
 import { Disclosure, DisclosureButton, DisclosurePanel } from "@headlessui/vue";
-import { ref, computed } from "vue";
-import { useRoute } from "vue-router";
 
-const route = useRoute();
-const currentPage = computed(() => route.path);
-
-const navigation = [
-  { name: "หน้าหลัก", href: "/", current: true },
-  {
-    name: "พนักงาน",
-    href: "/Employee",
-    current: false,
+export default {
+  components: {
+    Disclosure,
+    DisclosureButton,
+    DisclosurePanel,
   },
-  { name: "ลูกค้า", href: "/Customer", current: false },
-  { name: "หมวดหมู่", href: "/Category", current: false },
-  { name: "รายงาน", href: "/Report", current: false },
-  { name: "ขายสินค้า", href: "/POS", current: false },
-  { name: "ชำระเงิน", href: "/POS", current: false },
-];
+  data() {
+    return {
+      navigation: [
+        { name: "หน้าหลัก", href: "/", current: true },
+        { name: "ขายสินค้า", href: "/POS", current: false },
+        {
+          name: "พนักงาน",
+          href: "/Employee",
+          current: false,
+        },
+        { name: "สมาชิก", href: "/Customer", current: false },
 
-const userMenuOpen = ref(false);
+        { name: "จัดการสินค้า", href: "/Category", current: false },
+        { name: "รายงาน1", href: "/Report1", current: false },
+        { name: "รายงาน2", href: "/Report2", current: false },
 
-const signOut = () => {
-  // ลบ token ออกจาก localStorage
-  localStorage.removeItem("token");
-  // รีเฟรชหน้า
-  window.location.reload();
+        { name: "ชำระเงิน", href: "/Pay", current: false },
+      ],
+      userMenuOpen: false,
+    };
+  },
+  computed: {
+    currentPage() {
+      return this.$route.path;
+    },
+  },
+  methods: {
+    signOut() {
+      // ลบ token ออกจาก localStorage
+      localStorage.removeItem("token");
+      // รีเฟรชหน้า
+      window.location.reload();
+    },
+  },
 };
 </script>
-
 <style scoped>
 .active {
   background-color: green;

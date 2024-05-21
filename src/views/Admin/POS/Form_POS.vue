@@ -1,176 +1,101 @@
 <template>
-  <div class="container mx-auto px-4 py-6">
+  <div class="container mx-auto">
     <!-- Search and Customer Management Section -->
-    <div
-      class="text-xl font-bold tracking-wide text-green-800 animate__animated animate__bounceIn mb-4"
-    >
-      <div class="flex justify-start space-x-4 flex-wrap">
-        <div class="relative max-w-sm">
-          <input
-            type="text"
-            v-model="searchText"
-            placeholder="ค้นหาลูกค้า..."
-            class="px-4 py-2 border border-green-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-600 focus:border-transparent w-full"
-            @input="searchPostById"
-          />
-          <div
-            class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
-          >
-            <svg
-              class="h-5 w-5 text-green-400"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <circle cx="11" cy="11" r="8"></circle>
-              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-            </svg>
-          </div>
+    <div class="text-xl font-bold tracking-wide text-green-800 animate__animated animate__bounceIn mb-8">
+      <div class="flex justify-start space-x-6 flex-wrap py-6">
+        <div class="flex space-x-4">
+          <button @click="openCustomerPopup()"
+            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ease-in-out">
+            ลูกค้า
+          </button>
+          <SelectCustomer v-if="showCustomerPopup" @close="closeCustomerPopup" @select-customer="selectCustomer"
+            :customers="customers" />
         </div>
 
-        <div class="flex space-x-2">
-          <button
-            @click="openCustomerPopup()"
-            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          >
-            สมาชิก
+        <div class="flex space-x-4">
+          <button @click="openAddPopup()"
+            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition duration-300 ease-in-out">
+            เพิ่มลูกค้า
           </button>
-          <SelectCustomer
-            v-if="showCustomerPopup"
-            @close="closeCustomerPopup"
-            @select-customer="selectCustomer"
-            :customers="customers"
-          />
-        </div>
-
-        <div class="flex space-x-2">
-          <button
-            @click="openAddPopup()"
-            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          >
-            เพิ่มสมาชิก
-          </button>
-          <AddCustomer
-            v-if="showAddPopup"
-            @close="closeAddPopup"
-            @add="addCustomer"
-          />
+          <AddCustomer v-if="showAddPopup" @close="closeAddPopup" @add="addCustomer" />
         </div>
       </div>
+      <!-- -------------------------------------- -->
 
+      <!-- Date Section -->
+
+      <div class="flex justify-end mb-4 md:mb-0 text-center md:text-left">
+        <section class="mb-6 flex items-center justify-center md:justify-start">
+          <div class="flex items-center justify-start">
+            <h1 class="text-3xl font-light leading-tight" ref="dateDisplay">
+              วว/ดด/ปป
+            </h1>
+          </div>
+        </section>
+      </div>
       <!-- Customer Information Section -->
       <div
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 p-4"
-      >
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 p-6 bg-white rounded-lg shadow animate__animated animate__fadeInUp">
         <div class="flex flex-col">
-          <label for="customer-code" class="text-black mb-1">รหัสลูกค้า</label>
-          <input
-            type="text"
-            id="customer-code"
-            v-model="selectedCustomer.id"
-            class="border border-green-300 text-gray-900 rounded-md focus:ring-green-500 focus:border-green-500 px-3 py-2"
-            readonly
-          />
-        </div>
-        <div class="flex flex-col text-black font-bold">
-          <label for="member-code" class="text-black mb-1">รหัสสมาชิก</label>
-          <input
-            type="text"
-            id="customer-code"
-            v-model="selectedCustomer.id"
-            class="border border-green-300 text-gray-900 rounded-md focus:ring-green-500 focus:border-green-500 px-3 py-2"
-            readonly
-          />
+          <label for="full-name" class="text-lg text-black mb-2">ชื่อ-นามสกุล</label>
+          <input type="text" id="full-name" v-model="selectedCustomer.fullname"
+            class="border border-green-300 text-lg text-gray-900 rounded-lg focus:ring-green-500 focus:border-green-500 px-2 py-1 transition duration-300 ease-in-out"
+            readonly />
         </div>
         <div class="flex flex-col">
-          <label for="full-name" class="text-black mb-1">ชื่อ-นามสกุล</label>
-          <input
-            type="text"
-            id="full-name"
-            v-model="selectedCustomer.fullname"
-            class="border border-green-300 text-gray-900 rounded-md focus:ring-green-500 focus:border-green-500 px-3 py-2"
-            readonly
-          />
+          <label for="customer-code" class="text-lg text-black mb-2">เบอร์โทรศัพท์</label>
+          <input type="text" id="customer-code" v-model="selectedCustomer.tel"
+            class="border border-green-300 text-lg text-gray-900 rounded-lg focus:ring-green-500 focus:border-green-500 px-2 py-1 transition duration-300 ease-in-out"
+            readonly />
+        </div>
+
+        <div class="flex flex-col">
+          <label for="phone-number" class="text-lg text-black mb-2">ป้ายทะเบียน</label>
+          <input type="text" id="phone-number" v-model="selectedCustomer.vehicle_code"
+            class="border border-green-300 text-lg text-gray-900 rounded-lg focus:ring-green-500 focus:border-green-500 px-2 py-1 transition duration-300 ease-in-out"
+            readonly />
         </div>
         <div class="flex flex-col">
-          <label for="phone-number" class="text-black mb-1">เบอร์โทร</label>
-          <input
-            type="text"
-            id="phone-number"
-            v-model="selectedCustomer.phone"
-            class="border border-green-300 text-gray-900 rounded-md focus:ring-green-500 focus:border-green-500 px-3 py-2"
-            readonly
-          />
+          <label for="customer-code" class="text-lg text-black mb-2">ระดับ</label>
+          <input type="text" id="customer-code" v-model="selectedCustomer.level"
+            class="border border-green-300 text-lg text-gray-900 rounded-lg focus:ring-green-500 focus:border-green-500 px-2 py-1 transition duration-300 ease-in-out"
+            readonly />
         </div>
       </div>
     </div>
 
     <!-- Main Content Section -->
-    <div
-      class="flex flex-col md:flex-row bg-white rounded-lg shadow-md max-w-full"
-      style="height: 65vh"
-    >
+    <div class="flex flex-col md:flex-row bg-white rounded-lg shadow max-w-full animate__animated animate__fadeInUp"
+      style="height: calc(100vh - 8rem)">
       <!-- Categories and Products Section -->
-      <div
-        class="w-full md:w-3/4 md:pr-2 mb-4 overflow-y-auto border-r-green-300 border-r-4"
-      >
+      <div class="w-full md:w-3/4 md:pr-4 mb-6 overflow-y-auto border-r-green-300 border-r-4">
         <!-- Category Selection -->
-        <div v-if="!categorySelected && !subcategorySelected" class="m-4 p-4">
-          <h2
-            class="font-bold mb-4 text-green-800 animate__animated animate__fadeInDown"
-          >
+        <div v-if="!categorySelected && !subcategorySelected" class="m-6 p-6">
+          <h2 class="font-bold mb-6 text-2xl text-green-800 animate__animated animate__fadeInDown">
             <ol class="flex items-center">
               <li>
-                <a
-                  href="#"
-                  @click.prevent="resetSelection"
-                  class="text-green-500 hover:text-green-700 transition duration-300 animate__animated animate__pulse animate__infinite animate__slower"
-                  >หมวดหมู่สินค้า</a
-                >
+                <a href="#" @click.prevent="resetSelection"
+                  class="text-green-500 hover:text-green-700 transition duration-300 animate__animated animate__pulse animate__infinite animate__slower">ประเภทสินค้าหลัก</a>
               </li>
             </ol>
           </h2>
 
-          <div
-            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
-          >
-            <button
-              v-for="category in categories"
-              :key="category.id"
-              @click="selectCategory(category)"
-              class="bg-white text-green-800 rounded-md p-4 flex flex-col items-center shadow hover:shadow-lg transition duration-300 animate__animated animate__zoomIn"
-            >
-              <img
-                :src="category.icon"
-                alt="Category Icon"
-                class="w-20 h-20 object-cover mb-2 rounded"
-              />
-              <span class="text-lg animate__animated animate__bounceIn">{{
-                category.name
-              }}</span>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <button v-for="category in categories" :key="category._id" @click="selectCategory(category)"
+              class="bg-white rounded-lg p-4 flex flex-col items-center shadow hover:shadow-lg transition duration-300 animate__animated animate__zoomIn">
+              <span class="text-3xl font-bold animate__animated animate__bounceIn">{{ category.name }}</span>
             </button>
           </div>
         </div>
-
         <!-- Subcategory Selection -->
-        <div
-          v-else-if="categorySelected && !subcategorySelected"
-          class="m-4 p-4"
-        >
-          <h2 class="font-bold mb-4 text-green-800">
+        <div v-else-if="categorySelected && !subcategorySelected" class="m-6 p-6">
+          <h2 class="font-bold mb-6 text-2xl text-green-800">
             <ol class="flex items-center">
               <li>
-                <a
-                  href="#"
-                  @click.prevent="resetSelection"
-                  class="text-green-500 hover:text-green-700 transition duration-300"
-                  >หมวดหมู่สินค้า</a
-                >
+                <a href="#" @click.prevent="resetSelection"
+                  class="text-green-500 hover:text-green-700 transition duration-300">ประเภทสินค้าย่อย</a>
               </li>
-              <li class="mx-2 font-bold text-black text-xl">/</li>
+              <!-- <li class="mx-4 font-bold text-black text-xl">/</li>
               <li>
                 <a
                   href="#"
@@ -178,301 +103,197 @@
                   class="text-green-500 hover:text-green-700 transition duration-300"
                   >{{ selectedCategory.name }}</a
                 >
-              </li>
+              </li> -->
             </ol>
           </h2>
-          <div
-            class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
-          >
-            <button
-              v-for="subcategory in selectedCategory.subcategories"
-              :key="subcategory.id"
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <button v-for="subcategory in selectedCategory.subcategories" :key="subcategory._id"
               @click="selectSubcategory(subcategory)"
-              class="bg-white text-green-800 rounded-md p-4 flex flex-col items-center shadow hover:shadow-lg transition duration-300"
-            >
-              <img
-                :src="subcategory.icon"
-                alt="Subcategory Icon"
-                class="w-20 h-20 object-cover mb-2 rounded"
-              />
-              <span class="text-lg">{{ subcategory.name }}</span>
+              class="bg-white rounded-lg p-4 flex flex-col items-center shadow hover:shadow-lg transition duration-300 animate__animated animate__zoomIn">
+              <span class="text-3xl font-bold">{{ subcategory.name }}</span>
             </button>
           </div>
         </div>
 
         <!-- Product Selection -->
-        <div
-          v-else-if="categorySelected && subcategorySelected"
-          class="m-4 p-4"
-        >
-          <div
-            v-if="showProductPopup"
-            class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50"
-          >
-            <transition
-              name="scale"
-              enter-active-class="transition-all duration-300 ease-out"
-              leave-active-class="transition-all duration-200 ease-in"
-              enter-from-class="opacity-0 transform scale-75"
-              enter-to-class="opacity-100 transform scale-100"
-              leave-from-class="opacity-100 transform scale-100"
-              leave-to-class="opacity-0 transform scale-75"
-            >
-              <div
-                class="bg-white rounded-lg shadow-lg p-6 relative"
-                @click.stop
-              >
-                <button
-                  class="absolute top-3 right-3 text-red-500 hover:text-red-700 border-2 border-red-500 hover:border-red-700 rounded-full p-1 focus:outline-none focus:ring-2 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm"
-                  @click.prevent="resetSelection"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                </button>
+        <div v-else-if="categorySelected && subcategorySelected" class="m-6 p-6">
+          <h2 class="font-bold mb-6 text-2xl text-green-800 animate__animated animate__fadeInDown">
+            <ol class="flex items-center">
+              <li>
+                <a href="#" @click.prevent="resetSelection"
+                  class="text-green-500 hover:text-green-700 transition duration-300">ชื่อสินค้า</a>
+              </li>
+            </ol>
+          </h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div v-for="product in selectedSubcategory.products" :key="product._id"
+              class="bg-white text-black hover:bg-green-100 rounded-lg p-4 flex flex-col items-center shadow hover:shadow-lg transition duration-300 animate__animated animate__zoomIn">
+              <div class="flex flex-col justify-center items-center w-full">
+                <h3 class="text-2xl font-bold mb-2 tracking-wide text-black animate__animated animate__bounceIn">
+                  {{ product.name }}
+                </h3>
 
-                <h2
-                  class="font-bold mb-4 text-green-800 animate__animated animate__fadeInDown"
-                >
-                  <ol class="flex items-center">
-                    <li>
-                      <a
-                        href="#"
-                        @click.prevent="resetSelection"
-                        class="text-green-500 hover:text-green-700 transition duration-300"
-                        >หมวดหมู่สินค้า</a
-                      >
-                    </li>
-                    <li class="mx-2 font-bold text-black text-xl">/</li>
-                    <li>
-                      <a
-                        href="#"
-                        @click.prevent="resetSubcategorySelection"
-                        class="text-green-500 hover:text-green-700 transition duration-300"
-                        >{{ selectedCategory.name }}</a
-                      >
-                    </li>
-                    <li class="mx-2 font-bold text-black text-xl">/</li>
-                    <li class="text-green-800">
-                      {{ selectedSubcategory.name }}
-                    </li>
-                  </ol>
-                </h2>
+                <div>
+                  <p class="animate__animated animate__fadeInUp text-xl font-bold">
+                    ราคา: {{ getProductPrice(product) }} บาท
+                  </p>
+                  <p class="animate__animated animate__fadeInUp text-xl font-bold">
+                    ระดับ: {{ getProductLevel(product) }}
+                  </p>
 
-                <div
-                  class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
-                >
-                  <div
-                    v-for="product in selectedSubcategory.products"
-                    :key="product.id"
-                    class="bg-white text-black hover:bg-green-100 rounded-md p-4 flex flex-col items-center shadow hover:shadow-lg transition duration-300 animate__animated animate__zoomIn"
-                  >
-                    <img
-                      :src="product.image"
-                      :alt="product.name"
-                      class="w-20 h-20 object-cover mb-2 rounded"
-                    />
-                    <div
-                      class="flex flex-col justify-center items-center w-full"
-                    >
-                      <h3
-                        class="text-xl font-bold mb-2 tracking-wide text-black animate__animated animate__bounceIn"
-                      >
-                        {{ product.name }}
-                      </h3>
-
-                      <div>
-                        <!-- Quantity Popup -->
-                        <div
-                          v-if="showQuantityPopup"
-                          class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50"
-                        ></div>
-
-                        <p
-                          class="text-black text-xl font-bold mb-2 animate__animated animate__fadeInUp"
-                        >
-                          ราคา: {{ product.price }} บาท
-                        </p>
-
-                        <button
-                          @click="openQuantityPopup(product)"
-                          class="bg-green-400 text-white font-bold py-1 px-3 rounded-full hover:bg-green-700 transition duration-300 animate__animated animate__pulse animate__infinite animate__slower"
-                        >
-                          <i
-                            class="fas fa-shopping-cart mr-2 animate__animated animate__shake animate__infinite animate__slower"
-                          ></i>
-                          เพิ่มลงใน
-                        </button>
-                      </div>
-                    </div>
-                  </div>
+                  <button @click="openQuantityPopup(product)"
+                    class="bg-green-400 text-white font-bold py-1 px-3 rounded hover:bg-green-700 transition duration-300 animate__animated animate__pulse animate__infinite animate__slower">
+                    <i
+                      class="fas fa-shopping-cart mr-2 animate__animated animate__shake animate__infinite animate__slower"></i>
+                    เพิ่มลงใน
+                  </button>
                 </div>
               </div>
-            </transition>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Quantity Popup -->
-      <div
-        v-if="showQuantityPopup"
-        class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 text-2xl"
-      >
-        <div
-          class="bg-white rounded-lg shadow-lg p-6 relative text-black font-bold"
-        >
+      <div v-if="showQuantityPopup"
+        class="fixed inset-0 flex items-center justify-center z-50 animate__animated animate__fadeIn">
+        <div class="bg-white rounded-lg shadow p-6 relative animate__animated animate__zoomIn w-full md:w-1/2 lg:w-1/3">
           <div class="flex justify-end">
-            <button
-              @click="closeQuantityPopup"
-              type="button"
-              class="inline-flex text-red-500 hover:text-red-700 border-2 border-red-500 hover:border-red-700 rounded-full p-1 focus:outline-none focus:ring-2 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-6 w-6"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M6 18L18 6M6 6l12 12"
-                />
+            <button @click.stop="closeQuantityPopup" type="button"
+              class="inline-flex text-red-500 hover:text-red-700 border-2 border-red-500 hover:border-red-700 rounded-full p-1 focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-300 ease-in-out">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           </div>
-          <h2 class="font-bold mb-4 text-green-800">รายละเอียดสินค้า</h2>
-          <img
-            :src="selectedProduct.image"
-            class="w-20 h-20 object-cover mb-2 rounded"
-          />
-          <p>ชื่อสินค้า: {{ selectedProduct.name }}</p>
-          <p>ราคา: {{ selectedProduct.price }} บาท</p>
+          <div class="flex flex-col items-center">
+            <h2 class="font-bold mb-6 text-2xl text-green-800 animate__animated animate__fadeInDown">
+              รายละเอียดสินค้า
+            </h2>
 
-          <h2 class="font-bold mb-4 text-green-800">จำนวนสินค้า</h2>
-          <div class="flex items-center">
+            <p class="animate__animated animate__fadeInUp text-xl font-bold">
+              ชื่อสินค้า: {{ selectedProduct.name }}
+            </p>
+            <p class="animate__animated animate__fadeInUp text-xl font-bold">
+              ราคา/กก: {{ getProductPrice(selectedProduct) }} บาท
+            </p>
+            <p class="animate__animated animate__fadeInUp text-xl font-bold">
+              รวม:
+              {{
+            (getProductPrice(selectedProduct) * quantityInput).toFixed(2)
+          }}
+              บาท
+            </p>
+
+            <h2 class="font-bold mb-6 text-2xl text-green-800 animate__animated animate__fadeInDown text-center">
+              จำนวนน้ำหนักสินค้า
+
+              <div class="flex items-center justify-between animate__animated animate__fadeInUp">
+                <button
+                  class="bg-green-500 text-white font-bold py-1 px-3 rounded transition duration-300 ease-in-out hover:bg-green-700"
+                  @click="decrementQuantity">
+                  -
+                </button>
+                <input type="number" v-model.number="quantityInput" step="0.001"
+                  class="mx-2 w-66 text-center border border-green-500 rounded transition duration-300 ease-in-out" />
+                <button
+                  class="bg-green-500 text-white font-bold py-1 px-3 rounded transition duration-300 ease-in-out hover:bg-green-700"
+                  @click="incrementQuantity">
+                  +
+                </button>
+              </div>
+            </h2>
             <button
-              class="bg-green-500 text-white font-bold py-1 px-3 rounded"
-              @click="decrementQuantity"
-            >
-              -
-            </button>
-            <input
-              type="number"
-              v-model="quantityInput"
-              class="mx-2 w-20 text-center border border-green-500 rounded"
-            />
-            <button
-              class="bg-green-500 text-white font-bold py-1 px-3 rounded"
-              @click="incrementQuantity"
-            >
-              +
+              class="mt-4 bg-green-500 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out hover:bg-green-700 animate__animated animate__bounceIn"
+              @click="addToCartWithQuantity">
+              คำนวน
             </button>
           </div>
-
-          <button
-            class="mt-4 bg-green-500 text-white font-bold py-2 px-4 rounded"
-            @click="addToCartWithQuantity"
-          >
-            เพิ่มลงใน
-          </button>
         </div>
       </div>
 
       <!-- Cart Section -->
-      <div
-        class="w-full xl:w-1/4 md:w-2/4 sm:w-4/4 shadow-md rounded-lg overflow-y-auto animate__animated animate__fadeInDown"
-        style="max-height: 65vh"
-      >
+      <div class="w-full xl:w-2/5 md:w-2/4 sm:w-4/4 shadow rounded overflow-y-auto animate__animated animate__fadeInUp">
         <h2
-          class="text-2xl font-bold mb-4 flex items-center animate__animated animate__fadeInDown bg-green-500 text-white px-4 py-2"
-        >
+          class="text-lg font-bold mb-4 flex items-center animate__animated animate__fadeInDown bg-green-500 text-white px-4 py-2 rounded-t">
           <i
-            class="fas fa-shopping-cart mr-2 text-white animate__animated animate__pulse animate__infinite animate__slower"
-          ></i>
+            class="fas fa-shopping-cart mr-2 text-white animate__animated animate__pulse animate__infinite animate__slower"></i>
           สินค้า
         </h2>
-        <ul
-          v-if="cartItems.length > 0"
-          class="divide-y divide-green-500 animate__animated animate__fadeInUp p-4"
-        >
-          <li
-            v-for="(item, index) in cartItems"
-            :key="item.id"
-            class="flex flex-col sm:flex-row justify-between items-center mb-2 text-green-800 animate__animated animate__zoomIn"
-          >
-            <div class="flex items-center py-2">
-              <img
-                :src="item.image"
-                :alt="item.name"
-                class="w-16 h-16 object-cover mr-2 rounded animate__animated animate__pulse animate__infinite animate__slower"
-              />
+        <ul v-if="cartItems.length > 0" class="divide-y divide-green-500 animate__animated animate__fadeInUp px-2">
+          <li v-for="(item, index) in cartItems" :key="item._id"
+            class="flex flex-col sm:flex-row justify-between items-center mb-2 text-green-800 animate__animated animate__zoomIn">
+            <div class="flex items-center py-2 font-bold">
               <div>
-                <p class="text-lg">{{ item.name }}</p>
-                <div class="flex items-center py-1">
-                  <p class="text-green-600">ชิ้นละ: {{ item.price }} บาท</p>
-                </div>
-                <div class="flex items-center py-1">
-                  <p>จํานวน: {{ item.quantity }}</p>
+                <div class="flex items-center">
+                  <!-- <img
+                    :src="item.productImage"
+                    alt="Product Image"
+                    class="w-16 h-16 mr-2"
+                  /> -->
+                  <p class="text-lg mr-2">{{ item.name }}</p>
                 </div>
                 <div class="flex items-center py-1">
                   <p class="text-green-600">
-                    เป็น: {{ (item.price * item.quantity).toFixed(2) }} บาท
+                    ราคา/กก: {{ getProductPrice(item) }} บาท
+                  </p>
+                </div>
+                <div class="flex items-center py-1">
+                  <p>น้ำหนัก: {{ item.quantity.toFixed(2) }}</p>
+                </div>
+                <div class="flex items-center py-1">
+                  <p class="text-green-600">
+                    เป็น:
+                    {{ (getProductPrice(item) * item.quantity).toFixed(2) }} บาท
                   </p>
                 </div>
               </div>
             </div>
 
-            <div class="border-solid border-2 border-green-300">กล้อง</div>
+            <div
+              class="flex items-center border-green-300 animate__animated animate__pulse animate__infinite animate__slower">
+              <div>
+                <button @click="toggleCamera(index)"
+                  class="text-lg font-bold py-1 px-2 rounded bg-green-500 text-white hover:bg-green-700 transition duration-300 ease-in-out">
+                  ถ่ายรูป
+                </button>
+                <div v-if="item.showCamera" class="relative">
+                  <video ref="videoPlayer" :width="videoWidth" :height="videoHeight" autoplay></video>
+                  <button @click="captureImage(index)"
+                    class="text-lg font-bold py-1 px-2 rounded bg-green-500 text-white hover:bg-green-700 transition duration-300 ease-in-out mt-2">
+                    ถ่ายภาพ
+                  </button>
+                </div>
+                <div v-if="item.capturedImages && item.capturedImages.length > 0" class="mt-2 flex flex-wrap">
+                  <img v-for="(image, imageIndex) in item.capturedImages" :key="imageIndex" :src="image"
+                    alt="Captured Image" class="w-32 h-24 mr-2 mb-2" />
+                </div>
+              </div>
+            </div>
 
             <div class="flex items-center mt-2 sm:mt-0">
-              <button
-                @click="removeFromCart(index)"
-                class="text-red-500 hover:text-red-700 transition duration-300 border-4 rounded-md p-1 border-red-500 text-2xl"
-              >
+              <button @click="removeFromCart(index)"
+                class="text-red-500 hover:text-red-700 transition duration-300 border-2 rounded p-1 border-red-500 animate__animated animate__bounce">
                 <i class="fas fa-times"></i>
               </button>
             </div>
           </li>
         </ul>
-        <p
-          v-else
-          class="text-lg text-green-600 animate__animated animate__bounceIn p-4"
-        >
+        <p v-else class="text-lg text-green-600 animate__animated animate__bounceIn p-4">
           สินค้าของคุณว่างเปล่า
         </p>
         <div class="text-right p-4 animate__animated animate__fadeInUp">
-          <span class="text-xl text-green-800 font-bold"
-            >รวม: {{ total.toFixed(2) }} บาท</span
-          >
+          <span class="text-lg text-green-800 font-bold">รวม: {{ total.toFixed(2) }} บาท</span>
         </div>
+
         <div class="p-4">
-          <button
-            @click="checkout"
-            class="w-full bg-green-500 text-white text-lg font-bold py-2 rounded-md hover:bg-green-700 transition duration-300 animate__animated animate__rubberBand"
-          >
-            <i class="fas fa-shopping-cart mr-2"></i>
-            รอชำระเงิน
+          <button @click="openQueue" :disabled="fetchQueue"
+            class="w-full bg-green-500 text-white font-bold py-2 rounded hover:bg-green-700 transition duration-300 animate__animated animate__rubberBand">
+            <i class="fas fa-print mr-2"></i>
+            <span v-if="!fetchQueue">พิมบัตรคิว</span>
+            <span v-else @click="!fetchQueue ? (showReport = true) : null">กำลังดึงข้อมูล...</span>
           </button>
-          <Report_POS
-            v-if="showReport"
-            :cartItems="cartItems"
-            :total="total"
-            @close="closeReport"
-          />
+          <ReportPopup v-if="showReport" :cartItems="cartItems" :total="total" @close="closeReport" />
         </div>
       </div>
     </div>
@@ -480,146 +301,36 @@
 </template>
 
 <script>
+import axios from "axios"; // นำเข้า Axios
 import AddCustomer from "../Data_Customer/Add_Customer.vue";
-import SelectCustomer from "./List_Coutomer.vue";
-import Report_POS from "./Report_POS.vue";
+import SelectCustomer from "./SelectCustomer.vue";
+import ReportPopup from "./ReportPopup.vue";
 
 export default {
   name: "PosScreen",
   components: {
     AddCustomer,
     SelectCustomer,
-    Report_POS,
+    ReportPopup,
   },
-
   data() {
     return {
-      categories: [
-        {
-          id: 1,
-          name: "อิเล็กทรอนิกส์",
-          icon: "https://media.istockphoto.com/id/1447190789/th/%E0%B9%80%E0%B8%A7%E0%B8%84%E0%B9%80%E0%B8%95%E0%B8%AD%E0%B8%A3%E0%B9%8C/%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%8C%E0%B8%95%E0%B8%B9%E0%B8%99%E0%B8%9B%E0%B8%A5%E0%B8%B2%E0%B9%82%E0%B8%A5%E0%B8%A1%E0%B8%B2%E0%B8%95%E0%B8%A5%E0%B8%81%E0%B9%81%E0%B8%A2%E0%B8%81%E0%B8%9A%E0%B8%99%E0%B8%9E%E0%B8%B7%E0%B9%89%E0%B8%99%E0%B8%AB%E0%B8%A5%E0%B8%B1%E0%B8%87%E0%B8%AA%E0%B8%B5%E0%B8%82%E0%B8%B2%E0%B8%A7.jpg?s=612x612&w=is&k=20&c=Q2T6W0onAL4k1P5gJWTy_9J1ODIkT0XqOb9bLIGusOY=",
-          subcategories: [
-            {
-              id: 1,
-              name: "แล็ปท็อป",
-              icon: "https://media.istockphoto.com/id/1125201704/th/%E0%B9%80%E0%B8%A7%E0%B8%84%E0%B9%80%E0%B8%95%E0%B8%AD%E0%B8%A3%E0%B9%8C/%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%8C%E0%B8%95%E0%B8%B9%E0%B8%99%E0%B8%9B%E0%B8%A5%E0%B8%B2%E0%B9%82%E0%B8%A5%E0%B8%A1%E0%B8%B2%E0%B8%99%E0%B9%88%E0%B8%B2%E0%B8%A3%E0%B8%B1%E0%B8%81.jpg?s=1024x1024&w=is&k=20&c=GYblGm9McxEQqYyf_pVLJBLTBR3hR9pv4oRK2prG6WM=",
-              products: [
-                {
-                  id: 1,
-                  name: "MacBook Pro",
-                  price: 1999,
-                  image:
-                    "https://png.pngtree.com/png-clipart/20190516/original/pngtree-hand-painted-dolphins-cartoon-dolphin-q-version-of-dolphin-lovely-png-image_3821859.jpg",
-                },
-                {
-                  id: 2,
-                  name: "Dell XPS",
-                  price: 1499,
-                  image:
-                    "https://www.shutterstock.com/image-vector/cute-dolphin-cartoon-icon-vector-260nw-2426380235.jpg",
-                },
-              ],
-            },
-            {
-              id: 2,
-              name: "สมาร์ทโฟน",
-              icon: "https://i.ytimg.com/vi/cz-dJgbb3ZU/hqdefault.jpg",
-              products: [
-                {
-                  id: 3,
-                  name: "iPhone 12",
-                  price: 999,
-                  image: "https://i.ytimg.com/vi/SO7gzvEhOdE/hqdefault.jpg",
-                },
-                {
-                  id: 4,
-                  name: "Samsung Galaxy S21",
-                  price: 899,
-                  image:
-                    "https://e7.pngegg.com/pngimages/446/468/png-clipart-monster-ickis-drawing-monster-blue-cartoon-thumbnail.png",
-                },
-              ],
-            },
-          ],
-        },
-        {
-          id: 2,
-          name: "เสื้อผ้า",
-          icon: "https://img.pikbest.com/png-images/qiantu/thai-culture-buddha-statue-hand-drawn_2720796.png!sw801",
-          subcategories: [
-            {
-              id: 3,
-              name: "ผู้ชาย",
-              icon: "fas fa-male",
-              products: [
-                {
-                  id: 5,
-                  name: "เสื้อโปโล",
-                  price: 39.99,
-                  image: "https://example.com/polo-shirt.jpg",
-                },
-                {
-                  id: 6,
-                  name: "กางเกงยีนส์",
-                  price: 59.99,
-                  image: "https://example.com/jeans.jpg",
-                },
-              ],
-            },
-            {
-              id: 4,
-              name: "ผู้หญิง",
-              icon: "fas fa-female",
-              products: [
-                {
-                  id: 7,
-                  name: "เดรส",
-                  price: 49.99,
-                  image: "https://example.com/dress.jpg",
-                },
-                {
-                  id: 8,
-                  name: "กระโปรง",
-                  price: 39.99,
-                  image: "https://example.com/skirt.jpg",
-                },
-              ],
-            },
-          ],
-        },
-      ],
-      customers: [
-        {
-          id: "CUS001",
-          member_id: "MEM1234",
-          fullname: "สมชาย เรืองรอง",
-          phone: "0812345678",
-        },
-        {
-          id: "CUS002",
-          member_id: "MEM5678",
-          fullname: "สมหญิง มั่งมี",
-          phone: "0898765432",
-        },
-        {
-          id: "CUS003",
-          member_id: "MEM9012",
-          fullname: "นายก้อน ก้อนใหญ่",
-          phone: "0345678901",
-        },
-        {
-          id: "CUS004",
-          member_id: "MEM3456",
-          fullname: "นางสาวแพร มาลีวัลย์",
-          phone: "0612345678",
-        },
-      ],
-      selectedCustomer: {
-        id: "",
-        member_id: "",
+      categories: [],
+      subcategories: [],
+      products: [],
+
+      customers: {
+        class: "",
+        id_card: "",
         fullname: "",
-        phone: "",
+        vehicle_code: "",
+      },
+      selectedCustomer: {
+        class: "",
+        id_card: "",
+        fullname: "",
+        vehicle_code: "",
+        level: 1, // เพิ่มบรรทัดนี้
       },
       categorySelected: false,
       subcategorySelected: false,
@@ -633,18 +344,266 @@ export default {
       showProductPopup: false,
       quantityInput: 1,
       selectedProduct: null,
+      showCamera: false,
+      stream: null,
+      videoPlayer: null,
+      capturedImage: null,
+      videoWidth: 640, // Set the desired width of the video player
+      videoHeight: 480, // Set the desired height of the video player
+      fetchQueue: false,
     };
   },
+  mounted() {
+    this.startCamera();
+  },
+
   computed: {
     total() {
       return this.cartItems.reduce((total, item) => {
-        return total + item.price * item.quantity;
+        const price = this.getProductPrice(item);
+        return total + price * item.quantity;
       }, 0);
     },
   },
   methods: {
+    getProductPrice(product) {
+      if (
+        !this.selectedSubcategory ||
+        !this.selectedCustomer.level ||
+        !this.selectedSubcategory.prices
+      ) {
+        this.selectedCustomer.level = 1;
+        return 0;
+      }
+
+      const prices = this.selectedSubcategory.prices || [];
+      const price = prices.find((p) => p.detail_id === product._id);
+
+      if (!price) {
+        return 0;
+      }
+
+      const levelKey = `price_lv_${this.selectedCustomer.level}`;
+      return price[levelKey] || 0;
+    },
+
+    getProductLevel(product) {
+      if (
+        !this.selectedSubcategory ||
+        !this.selectedCustomer.level ||
+        !this.selectedSubcategory.prices
+      ) {
+        this.selectedCustomer.level = 1;
+        return 0;
+      }
+
+      const price = (this.selectedSubcategory.prices || []).find(
+        (p) => p.detail_id === product._id
+      );
+
+      return price?.level || 0;
+    },
+    toggleCamera(index) {
+      this.cartItems[index].showCamera = !this.cartItems[index].showCamera;
+      if (this.cartItems[index].showCamera) {
+        this.openCamera(index);
+      } else {
+        this.stopCamera(index);
+      }
+    },
+    openCamera(index) {
+      const constraints = {
+        video: {
+          width: this.videoWidth,
+          height: this.videoHeight,
+        },
+      };
+
+      navigator.mediaDevices
+        .getUserMedia(constraints)
+        .then((stream) => {
+          this.cartItems[index].stream = stream;
+          this.$nextTick(() => {
+            const videoPlayer = this.$refs.videoPlayer?.[index];
+            if (videoPlayer) {
+              videoPlayer.srcObject = stream;
+            }
+          });
+        })
+        .catch((error) => {
+          console.error("Error accessing camera:", error);
+        });
+    },
+    stopCamera(index) {
+      if (this.cartItems[index].stream) {
+        this.cartItems[index].stream
+          .getTracks()
+          .forEach((track) => track.stop());
+        this.cartItems[index].stream = null;
+      }
+    },
+    captureImage(index) {
+      const videoPlayer = this.$refs.videoPlayer?.[index];
+      if (videoPlayer && videoPlayer.readyState === 4) {
+        const canvas = document.createElement("canvas");
+        canvas.width = videoPlayer.videoWidth;
+        canvas.height = videoPlayer.videoHeight;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(videoPlayer, 0, 0, canvas.width, canvas.height);
+        const capturedImage = canvas.toDataURL("image/png");
+
+        // การเข้าถึงโดยตรงและกำหนดค่าโดยตรง
+        if (this.cartItems[index]) {
+          this.cartItems[index].capturedImages = [
+            ...(this.cartItems[index].capturedImages || []),
+            capturedImage,
+          ];
+        }
+      }
+    },
+
+    async fetchCategories() {
+      try {
+        const response = await fetch(`${process.env.VITE_API_ALL}product/category`);
+        const data = await response.json();
+        this.categories = data.data;
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    },
+
+    async fetchTypes(categoryId) {
+      try {
+        const response = await fetch(
+          `${process.env.VITE_API_ALL}product/type`
+        );
+        const data = await response.json();
+        const category = this.categories.find((c) => c._id === categoryId);
+
+        if (category) {
+          category.subcategories = data.data.filter(
+            (subcategory) => subcategory.cate_id === categoryId
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching types:", error);
+      }
+    },
+
+    async fetchDetails(categoryId, typeId) {
+      try {
+        const response = await fetch(
+          `${process.env.VITE_API_ALL}product/detail`
+        );
+        const data = await response.json();
+        const category = this.categories.find((c) => c._id === categoryId);
+
+        if (category) {
+          const subcategory = category.subcategories.find(
+            (s) => s._id === typeId
+          );
+
+          if (subcategory) {
+            subcategory.products = data.data.filter(
+              (product) =>
+                product.cate_id === categoryId && product.type_id === typeId
+            );
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching details:", error);
+        // Add your error handling logic here
+      }
+    },
+
+    async fetchPrices(categoryId, typeId, detailId) {
+      try {
+        const response = await fetch(
+          `${process.env.VITE_API_ALL}product/price`
+        );
+        const { data } = await response.json();
+        const category = this.categories.find((c) => c._id === categoryId);
+
+        if (category) {
+          const subcategory = category.subcategories.find(
+            (s) => s._id === typeId
+          );
+
+          if (subcategory) {
+            subcategory.prices = data.filter(
+              (price) =>
+                price.cate_id === categoryId && price.type_id === typeId
+            );
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching prices:", error);
+      }
+    },
+
+    async openQueue() {
+      try {
+        const { data } = await axios.post(
+          `${process.env.VITE_API_ALL}queue`,
+          {
+            customer_id: this.selectedCustomer?.id_card || "",
+            product_detail: this.cartItems.map((item) => ({
+              price_id: this.cartItems?.[0]._id,
+              qty: item.totalPrice,
+              image: item.capturedImages?.[0] || "",
+            })),
+          }
+        );
+        console.log("ข้อมูลคอร์สได้รับ:", this.cartItems);
+      } catch (error) {
+        console.error("ไม่สามารถดึงข้อมูลคอร์สได้:", error);
+      }
+    },
+
+    updateDate() {
+      const dateElement = this.$refs.dateDisplay;
+      if (dateElement) {
+        const currentDate = new Date();
+        const options = {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          hour: "numeric",
+          minute: "numeric",
+          second: "numeric",
+        };
+        const formattedDate = new Intl.DateTimeFormat("th-TH", options).format(
+          currentDate
+        );
+        dateElement.innerText = formattedDate;
+      }
+    },
+
+    selectCategory(category) {
+      this.categorySelected = true;
+      this.subcategorySelected = false;
+      this.selectedCategory = category;
+      this.selectedSubcategory = null;
+      this.fetchTypes(category._id);
+    },
+
+    selectSubcategory(subcategory) {
+      this.subcategorySelected = true;
+      this.selectedSubcategory = subcategory;
+      this.fetchDetails(this.selectedCategory._id, subcategory._id);
+      this.fetchPrices(this.selectedCategory._id, subcategory._id); // เพิ่มบรรทัดนี้
+      if (this.selectedSubcategory) {
+        this.showProductPopup = true;
+      }
+    },
+
+    openQeue() {
+      this.showReport = true;
+    },
+
     selectCustomer(customer) {
-      this.selectedCustomer = { ...customer }; // อัปเดตข้อมูลลูกค้าที่เลือก
+      this.selectedCustomer = { ...customer };
       this.closeCustomerPopup();
     },
     openAddPopup() {
@@ -666,29 +625,14 @@ export default {
       this.showCustomerPopup = false;
     },
     showCustomer(customer) {
-      // ทำอะไรกับข้อมูลลูกค้าที่เลือก
       console.log("Selected customer:", customer);
     },
 
-    checkout() {
-      this.showReport = true;
-    },
     closeReport() {
       this.showReport = false;
     },
     removeFromCart(index) {
       this.cartItems.splice(index, 1);
-    },
-    selectCategory(category) {
-      this.categorySelected = true;
-      this.subcategorySelected = false;
-      this.selectedCategory = category;
-      this.selectedSubcategory = null;
-    },
-    selectSubcategory(subcategory) {
-      this.subcategorySelected = true;
-      this.selectedSubcategory = subcategory;
-      this.openProductPopup(); // เปิด popup เมื่อเลือกประเภทสินค้าย่อย
     },
     resetCategorySelection() {
       this.categorySelected = false;
@@ -701,74 +645,88 @@ export default {
       this.selectedSubcategory = null;
     },
     resetSelection() {
-      if (this.subcategorySelected) {
-        this.resetSubcategorySelection();
-      } else if (this.categorySelected) {
-        this.resetCategorySelection();
-      }
-    },
-    // Your methods here
-    addToCart(product, quantity) {
-      const existingItem = this.cartItems.find(
-        (item) => item.id === product.id
-      );
-
-      if (existingItem) {
-        existingItem.quantity += quantity;
-      } else {
-        this.cartItems.push({
-          ...product,
-          quantity,
-        });
-      }
-    },
-
-    incrementQuantity(index) {
-      this.cartItems[index].quantity++;
-    },
-    decrementQuantity(index) {
-      if (this.cartItems[index].quantity > 1) {
-        this.cartItems[index].quantity--;
-      }
+      this.categorySelected = false;
+      this.subcategorySelected = false;
+      this.selectedCategory = null;
+      this.selectedSubcategory = null;
     },
     openQuantityPopup(product) {
       this.selectedProduct = product;
+      this.quantityInput = 1;
       this.showQuantityPopup = true;
     },
     closeQuantityPopup() {
       this.showQuantityPopup = false;
-      this.quantityInput = 1;
-      this.selectedProduct = null;
     },
     incrementQuantity() {
-      this.quantityInput++;
+      this.quantityInput += 0.1;
     },
     decrementQuantity() {
-      if (this.quantityInput > 1) {
-        this.quantityInput--;
+      if (this.quantityInput > 0.0) {
+        this.quantityInput -= 0.1;
       }
     },
     addToCartWithQuantity() {
       const existingItem = this.cartItems.find(
-        (item) => item.id === this.selectedProduct.id
+        (item) => item._id === this.selectedProduct._id
       );
+      const price = this.getProductPrice(this.selectedProduct);
+      const totalPrice = (price * this.quantityInput).toFixed(2);
+
+      const newItem = {
+        ...this.selectedProduct,
+        quantity: this.quantityInput,
+        totalPrice: totalPrice,
+      };
 
       if (existingItem) {
         existingItem.quantity += this.quantityInput;
       } else {
-        this.cartItems.push({
-          ...this.selectedProduct,
-          quantity: this.quantityInput,
-        });
+        this.cartItems.push(newItem);
       }
+      console.log(this.cartItems);
 
       this.closeQuantityPopup();
     },
-    openProductPopup() {
-      this.showProductPopup = true;
+    startCamera() {
+      navigator.mediaDevices
+        .getUserMedia({ video: true })
+        .then((stream) => {
+          this.stream = stream;
+          this.$nextTick(() => {
+            const videoPlayer = this.$refs.videoPlayer;
+            if (videoPlayer) {
+              videoPlayer.srcObject = stream;
+            } else {
+              console.error("videoPlayer reference is undefined.");
+            }
+          });
+        })
+        .catch((error) => {
+          console.error("Error accessing camera:", error);
+        });
     },
-    closeProductPopup() {
-      this.showProductPopup = false;
+    stopCamera() {
+      if (this.stream) {
+        this.stream.getTracks().forEach((track) => track.stop());
+        this.stream = null;
+      }
+    },
+  },
+
+  created() {
+    this.fetchCategories();
+    this.updateDate();
+    setInterval(this.updateDate, 1000); // Update date every second
+  },
+
+  watch: {
+    showQuantityPopup(newValue) {
+      if (newValue) {
+        this.startCamera();
+      } else {
+        this.stopCamera();
+      }
     },
   },
 };

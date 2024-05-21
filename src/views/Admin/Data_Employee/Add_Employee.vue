@@ -216,14 +216,14 @@ export default {
         }).then(async (result) => {
           if (result.isConfirmed) {
             await axios.post(
-              `${import.meta.env.VITE_API_EMPLOYEE}`,
+              `${import.meta.env.VITE_API_ALL}/employee/`,
               this.formData
             );
             {
               await Swal.fire("เพิ่มข้อมูลสําเร็จ!", "", "success");
               this.$emit("close");
             }
-            await window.location.reload();
+            this.$emit("added");
           }
         });
       } catch (error) {
